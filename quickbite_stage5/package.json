@@ -1,0 +1,16 @@
+{
+  "name": "quickbite",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "find src -name \"*.js\" -exec node --check {} \\;",
+    "test": "node --test tests/unit/*.test.js"
+  },
+  "devDependencies": {
+    "vite": "^6.4.1"
+  }
+}
