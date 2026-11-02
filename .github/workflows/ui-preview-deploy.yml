@@ -19,37 +19,33 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: quickbite_stage5
     steps:
       - name: Check out main
         uses: actions/checkout@v4
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: quickbite_stage5/package-lock.json
 
       - name: Install dependencies
+        working-directory: quickbite_stage5
         run: npm install
 
       - name: Run automated tests
+        working-directory: quickbite_stage5
         run: npm test
 
       - name: Check JavaScript syntax
+        working-directory: quickbite_stage5
         run: npm run check
 
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Build production preview
+        working-directory: quickbite_stage5
         run: npm run build
 
       - name: Upload Pages artifact
