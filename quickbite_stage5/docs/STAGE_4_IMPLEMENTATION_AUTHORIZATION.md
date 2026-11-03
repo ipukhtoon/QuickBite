@@ -821,3 +821,35 @@ If the user rejects or changes any part, revise this document and resubmit it fo
 **2026-11-03 — APPROVED BY USER**
 
 The user explicitly authorized Stage 5 with the exact phrase `APPROVED — BEGIN STAGE 5 IMPLEMENTATION`. This authorization applies to the approved scope in this document. Production deployment, paid services, irreversible production data changes and use of production customer data still require separate explicit authorization.
+
+
+## 2026-11-03 — User clarification: current approval is UI testing only
+
+The user clarified the scope of the current approval with: **“Just ui testing”.**
+
+This clarification governs the current work and must be read together with the historical approval record above. For the current authorization:
+
+### Authorized
+- UI-only demo and walkthrough work within the previously defined UI Testing Milestone.
+- Visual refinement and comparison against the approved 12-screen reference.
+- Frontend-only navigation and local demo interactions needed to exercise the UI.
+- Safe demo fixtures clearly labelled as demo data and stored locally only.
+- Source-level, automated UI tests and browser/device UI testing where tools are available.
+- Goldfish independent UI/UX inspection and reporting.
+
+### Explicitly not authorized by this clarification
+- Firebase Authentication, Firestore, Storage or Cloud Functions integration or changes.
+- Firebase Security Rules, production database or Firebase project changes.
+- Real order submission, live guest-order credentials, production catalogue or customer records.
+- Payment processing, live delivery/pickup configuration, real fees/taxes or operational restaurant settings.
+- Production deployment, domain/hosting changes, paid service activation or irreversible data changes.
+- Expansion beyond the existing UI Testing Milestone without separate approval.
+
+### Data and behavior boundaries
+- Demo catalogues, orders, users, metrics and admin edits must be visibly identified as simulated.
+- Demo data remains local to the browser and must never be represented as real restaurant data.
+- Checkout/order placement remains a non-production preview; no real order may be created.
+- No secrets, credentials or production customer data may be introduced.
+
+### Authorization interpretation
+This is a scope clarification, not a new authorization for backend or production implementation. The historical broad Stage 5 approval remains in the record, but the **current active work authorization is limited to UI testing only**. Any expansion requires a new explicit user approval before work begins.
