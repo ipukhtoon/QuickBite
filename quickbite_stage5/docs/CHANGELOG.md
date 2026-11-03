@@ -118,3 +118,10 @@ For every future stage:
 - Added 29 uniquely identified requirements (QB3-001–QB3-029), 32 acceptance tests (AT-01–AT-32), risk disposition and 12 unresolved user/business decisions.
 - Stage 3: **COMPLETE**. No application code, Firebase data, production settings or deployment configuration changed.
 - Stage 4: **NOT STARTED / NOT APPROVED**. Stage 5: **NOT AUTHORIZED**.
+
+
+## 2026-11-03 — UI Testing Milestone resumed (UI-only scope)
+- User clarified current approval is **UI testing only**; backend/Firebase, production data, real orders/payments, deployment and paid-service activation remain excluded.
+- Replaced Home hero QB placeholder with featured demo food photography, added representative category image fallback from the matching demo category, and refined image fitting/overlay styles.
+- Goldfish appended independent source findings GF-UI-06–GF-UI-09. Browser/Android visual interaction remains unverified; milestone is still in progress.
+- Updated workflow register and UI milestone QA report. No Firebase or production changes.
