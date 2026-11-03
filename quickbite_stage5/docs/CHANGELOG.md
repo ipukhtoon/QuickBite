@@ -125,3 +125,11 @@ For every future stage:
 - Replaced Home hero QB placeholder with featured demo food photography, added representative category image fallback from the matching demo category, and refined image fitting/overlay styles.
 - Goldfish appended independent source findings GF-UI-06–GF-UI-09. Browser/Android visual interaction remains unverified; milestone is still in progress.
 - Updated workflow register and UI milestone QA report. No Firebase or production changes.
+
+
+## 2026-11-03 — Full reference UI reconstruction pass
+- Reworked Welcome, Home and Menu screen composition to align with the supplied premium dark/amber 12-screen reference, including food-led hero treatment, category tiles, product-card hierarchy, filters and shared navigation.
+- Rebuilt authentication and admin dashboard/manage-menu layouts; refined product detail, cart, checkout and order/tracking presentation with a unified visual system.
+- Preserved existing routes, cart/catalog services, demo-only data boundaries and disabled real authentication/order/payment operations.
+- No Firebase, production data, live orders, payment, hosting or deployment configuration changed.
+- CI build/tests and independent Goldfish source review pending; actual screenshot comparison and Android interaction remain unverified until the user tests the deployed preview.
