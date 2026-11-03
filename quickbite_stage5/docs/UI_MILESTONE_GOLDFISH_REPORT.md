@@ -57,3 +57,28 @@ No Critical defects were identified by source inspection. This does not establis
 ## Goldfish conclusion
 
 **Source-level milestone implementation is present, but UI acceptance is not complete.** The next required QA step is real browser testing after dependencies are installed. Do not enable Firebase, real order submission, payment, or production admin writes as part of this milestone.
+
+
+## 2026-11-03 — Follow-up UI implementation pass (source evidence only)
+
+**Scope:** UI-only authorization. No Firebase/backend, production data, payment, real order submission or deployment configuration changes.
+
+### Developer changes recorded
+- Replaced the Home hero's CSS-only QB placeholder with the first available featured demo product photograph; retained the typographic fallback when no image is available.
+- Home category tiles now use a representative image from the same demo category when the category itself has no explicit image.
+- Added scoped presentation rules so the Home hero photo fills its circular frame with a controlled crop and overlay; standardized image rendering for product cards and product detail images.
+- Existing welcome screen already references a real burger photograph; product/menu/cart components already reuse product image URLs where available.
+
+### Goldfish independent source review
+| ID | Severity | Evidence | Finding / recommendation |
+|---|---|---|---|
+| GF-UI-06 | High | VERIFIED BY SOURCE | Demo photography is still loaded from remote Unsplash URLs, not bundled local assets. Offline/blocked image delivery can leave visual gaps; use approved local assets or provide tested fallbacks before visual acceptance. |
+| GF-UI-07 | High | NOT TESTABLE | Home hero/category image crop, responsive geometry and image loading were not rendered in a browser after the changes. Capture reference-matched screenshots before these fixes can be visually verified. |
+| GF-UI-08 | Medium | VERIFIED BY SOURCE | Category image currently reuses the first available product image in that category. This is an interim fallback, not a curated category-asset set. |
+| GF-UI-09 | Medium | VERIFIED BY SOURCE | Welcome Get Started and Continue as guest both navigate to Home. Confirm this behavior against the v1.5 interaction specification before changing navigation. |
+
+### Verification state after this pass
+- Source modifications committed to main: src/features/home/home-page.js (hero photo and representative category imagery); src/styles/global.css (image fitting/overlay/presentation).
+- No browser screenshots, real touch interactions, Android viewport tests, keyboard tests or image-network failure tests were performed in this pass.
+- No claim is made that the 12-screen visual milestone is complete.
+- Previous automated test results (23 passed, 0 failed; syntax passed; Vite build unavailable in that earlier environment) are historical and have not been rerun after this pass.
