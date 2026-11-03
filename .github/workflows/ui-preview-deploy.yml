@@ -1,11 +1,11 @@
-name: QuickBite UI Preview
+name: QuickBite Pages Preview
 
 on:
   push:
     branches: [main]
     paths:
       - "quickbite_stage5/**"
-      - ".github/workflows/ui-preview-deploy.yml"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:
@@ -18,41 +18,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  quality:
+    name: Independent code checks
     runs-on: ubuntu-latest
     steps:
       - name: Check out main
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
       - name: Install dependencies
         working-directory: quickbite_stage5
         run: npm install
-
       - name: Run automated tests
         working-directory: quickbite_stage5
         run: npm test
-
       - name: Check JavaScript syntax
         working-directory: quickbite_stage5
         run: npm run check
 
+  deploy-preview:
+    name: Build and publish test preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        working-directory: quickbite_stage5
+        run: npm install
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-
       - name: Build production preview
         working-directory: quickbite_stage5
         run: npm run build
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: quickbite_stage5/dist
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy preview to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
