@@ -6,7 +6,7 @@ function productCard(p) { return `<article class="food-card"><div class="food-ca
 export function homePage(source = { products: [], categories: [] }) {
   const catalog = normalizeCatalog(source.products, source.categories);
   const featured = catalog.products.filter((p) => p.available && p.featured).slice(0, 4);
-  const categories = catalog.categories;
+  const categories = catalog.categories.map((category) => ({ ...category, imageUrl: category.imageUrl || catalog.products.find((product) => product.categoryId === category.id && product.imageUrl)?.imageUrl || '' }));
   return `<main class="store-page" id="main-content">
     <header class="store-header"><a class="brand brand--compact" href="#/home" aria-label="QuickBite home"><span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i></span><span class="brand__word">Quick<span>Bite</span></span></a><div class="store-header__actions"><span class="guest-chip">Guest</span><a class="icon-action" href="#/cart" aria-label="Open cart">♧</a></div></header>
     <section class="home-hero" aria-labelledby="home-title"><div class="home-hero__copy"><p class="eyebrow">MADE FRESH, JUST FOR YOU</p><h1 id="home-title">Good food.<br><em>Good mood.</em></h1><p>Discover your next favourite bite.</p><a class="button button--primary" href="#/menu">Explore menu <span aria-hidden="true">→</span></a></div><div class="home-hero__art">${featured[0]?.imageUrl ? `<img src="${escapeAttr(featured[0].imageUrl)}" alt="${escapeAttr(featured[0].name)}" fetchpriority="high">` : '<span aria-hidden="true">QB</span>'}</div></section>
