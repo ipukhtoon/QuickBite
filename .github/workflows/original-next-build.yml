@@ -1,0 +1,48 @@
+name: Original QuickBite Cloud Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cloud-preview
+    paths:
+      - '.github/workflows/original-next-build.yml'
+      - 'quickbite-source.zip'
+
+permissions:
+  contents: read
+
+jobs:
+  build-original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: ''
+
+      - name: Enable pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.3.4
+
+      - name: Extract untouched original source
+        run: |
+          mkdir original-source
+          unzip -q quickbite-source.zip -d original-source
+          test -f original-source/package.json
+          test -f original-source/pnpm-lock.yaml
+          test -f original-source/app/page.tsx
+
+      - name: Install locked dependencies
+        working-directory: original-source
+        run: pnpm install --frozen-lockfile
+
+      - name: Build original Next.js application
+        working-directory: original-source
+        run: pnpm build
