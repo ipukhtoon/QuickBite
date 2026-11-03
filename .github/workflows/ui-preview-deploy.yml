@@ -1,65 +1,57 @@
-name: QuickBite Pages Preview
-
+name: QuickBite build, QA and Pages preview
 on:
   push:
     branches: [main]
     paths:
-      - "quickbite_stage5/**"
+      - "quickbite_rebuild/**"
+      - "firestore.rules"
       - ".github/workflows/**"
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: quickbite-pages
   cancel-in-progress: true
-
 jobs:
   quality:
-    name: Independent code checks
+    name: Build and automated source checks
     runs-on: ubuntu-latest
     steps:
-      - name: Check out main
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: quickbite_rebuild/package.json
       - name: Install dependencies
-        working-directory: quickbite_stage5
+        working-directory: quickbite_rebuild
         run: npm install
-      - name: Run automated tests
-        working-directory: quickbite_stage5
+      - name: Syntax and test checks
+        working-directory: quickbite_rebuild
         run: npm test
-      - name: Check JavaScript syntax
-        working-directory: quickbite_stage5
-        run: npm run check
-
+      - name: Production build
+        working-directory: quickbite_rebuild
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quickbite-build
+          path: quickbite_rebuild/dist
+          if-no-files-found: error
   deploy-preview:
-    name: Build and publish test preview
+    name: Publish verified build preview
+    needs: quality
     runs-on: ubuntu-latest
     steps:
-      - name: Check out main
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/download-artifact@v4
         with:
-          node-version: 22
-      - name: Install dependencies
-        working-directory: quickbite_stage5
-        run: npm install
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-      - name: Build production preview
-        working-directory: quickbite_stage5
-        run: npm run build
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+          name: quickbite-build
+          path: dist
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: quickbite_stage5/dist
-      - name: Deploy preview to GitHub Pages
+          path: dist
+      - name: Deploy preview
         id: deployment
         uses: actions/deploy-pages@v4
