@@ -1,0 +1,46 @@
+name: Extract Original QuickBite Design Source
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/extract-original-design.yml"
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Extract original source files without running the React app
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s quickbite-source.zip
+          unzip -t quickbite-source.zip
+          rm -rf /tmp/qb-original
+          mkdir -p /tmp/qb-original design-reference/original
+          unzip -q quickbite-source.zip -d /tmp/qb-original
+          echo "=== FULL ARCHIVE TREE ==="
+          find /tmp/qb-original -type f -printf '%P\n' | sort | tee design-reference/ARCHIVE-FILE-LIST.txt
+          echo "=== LOCATE SOURCE OF TRUTH ==="
+          find /tmp/qb-original -type f \( -path '*/components/quickbite-screens.tsx' -o -path '*/components/quickbite-showcase.tsx' -o -path '*/app/globals.css' -o -path '*/app/page.tsx' \) -print
+          for rel in components/quickbite-screens.tsx components/quickbite-showcase.tsx app/globals.css app/page.tsx; do
+            src="$(find /tmp/qb-original -type f -path "*/$rel" -print -quit)"
+            if [ -z "$src" ]; then echo "Missing required original source: $rel"; exit 1; fi
+            mkdir -p "design-reference/original/$(dirname "$rel")"
+            cp "$src" "design-reference/original/$rel"
+          done
+          mkdir -p design-reference/original/public
+          find /tmp/qb-original -type f -path '*/public/images/*' -exec cp --parents '{}' /tmp/qb-copy-root/ \; 2>/dev/null || true
+          echo "=== EXTRACTED FILE SIZES ==="
+          wc -l design-reference/original/components/quickbite-screens.tsx design-reference/original/components/quickbite-showcase.tsx design-reference/original/app/globals.css design-reference/original/app/page.tsx
+          du -sh /tmp/qb-original
+      - name: Commit extracted original design source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add design-reference
+          if git diff --cached --quiet; then echo "Reference source already current."; else git commit -m "Extract original QuickBite UI source for faithful port"; git push; fi
