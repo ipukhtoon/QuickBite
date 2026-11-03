@@ -110,3 +110,11 @@ For every future stage:
 - Stage 2 outcome: **not approved as-is**; Stage 3 must resolve the listed decisions.
 - No application code, Firebase data, production records or deployment settings were changed.
 - Stage 3 has **not** started. Stage 4 approval and Stage 5 implementation remain unauthorized.
+
+
+## 2026-11-03 — Stage 3 Improvement completed
+- Consolidated Stage 2 CR-01–CR-19 into `STAGE_3_IMPROVED_ARCHITECTURE.md`.
+- Defined target logical architecture, explicit dev/demo/production data boundaries, integer-paisa contract, trusted order/idempotency contract, guest access lifecycle, role model, order state machine, restaurant configuration requirements, auth/account journeys, IndexedDB/router lifecycle, asset pipeline, measurable visual acceptance, Android/accessibility baseline and layered release gates.
+- Added 29 uniquely identified requirements (QB3-001–QB3-029), 32 acceptance tests (AT-01–AT-32), risk disposition and 12 unresolved user/business decisions.
+- Stage 3: **COMPLETE**. No application code, Firebase data, production settings or deployment configuration changed.
+- Stage 4: **NOT STARTED / NOT APPROVED**. Stage 5: **NOT AUTHORIZED**.
