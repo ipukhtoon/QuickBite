@@ -45,7 +45,7 @@ Required personas: first-time visitor, guest customer, registered customer, retu
 |---|---|---|
 | Stage 1 — Reference Reconstruction | `docs/REFERENCE_DESIGN_SPEC.md` plus Version 1.5 handoff | COMPLETE |
 | Stage 1 — Actual Architecture Inspection | `docs/STAGE_1_ARCHITECTURE_INSPECTION.md` | COMPLETE |
-| Stage 2 — Critical Reviewer | `docs/STAGE_2_CRITICAL_REVIEW.md` | IN PROGRESS — review findings recorded; user has not authorized Stage 3 |
+| Stage 2 — Critical Reviewer | `docs/STAGE_2_CRITICAL_REVIEW.md` | COMPLETE — review recorded; user has not authorized Stage 3 |
 | Stage 3 — Improvement | To be recorded when begun | NOT STARTED |
 | Stage 4 — Approval | To be recorded when prepared | NOT STARTED |
 | Stage 5 — Implementation | To be recorded when authorized | NOT STARTED |
