@@ -2,7 +2,8 @@ import { bottomNav } from '../../components/bottom-nav.js';
 import { normalizeCatalog } from '../../services/catalog.js';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>`Rs ${Number(n).toLocaleString('en-PK',{maximumFractionDigits:0})}`;
-const asset=name=>`${import.meta.env.BASE_URL}images/${name}`;
+const assetBase=import.meta.env?.BASE_URL||'/';
+const asset=name=>`${assetBase}images/${name}`;
 function productCard(p){return `<article class="food-card"><a class="food-card__image" href="#/product?id=${encodeURIComponent(p.id)}"><img src="${esc(p.imageUrl||asset('classic-burger.webp'))}" alt="${esc(p.name)}" loading="lazy"></a><div class="food-card__body"><div class="food-card__meta"><span>QUICKBITE FAVOURITE</span><span aria-hidden="true">✦</span></div><h3>${esc(p.name)}</h3><p>${esc(p.description)}</p><div class="food-card__foot"><strong>${money(p.price)}</strong><a href="#/product?id=${encodeURIComponent(p.id)}" aria-label="View ${esc(p.name)}">＋</a></div></div></article>`;}
 export function homePage(source={products:[],categories:[]}){const c=normalizeCatalog(source.products,source.categories),featured=c.products.filter(p=>p.available&&p.featured).slice(0,4),cats=c.categories;const categoryImages=['classic-burger.webp','pizza.webp','fries.webp','drinks.webp'];return `<main class="store-page home-page qb-reference-home" id="main-content">
 <header class="store-header"><a class="brand brand--compact" href="#/home" aria-label="QuickBite home"><span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i></span><span class="brand__word">Quick<span>Bite</span></span></a><div class="store-header__actions"><a class="guest-chip" href="#/sign-in">Sign in</a><a class="icon-action" href="#/cart" aria-label="Open cart">♧</a></div></header>
