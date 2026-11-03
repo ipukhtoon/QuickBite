@@ -100,3 +100,13 @@ For every future stage:
 - Added My Orders, Order Tracking, Admin Dashboard and Manage Menu preview screens.
 - Admin sample edits persist only in browser-local demo storage; no Firebase or production writes.
 - Added milestone unit tests. Real browser interaction and visual comparison remain outstanding.
+
+
+## 2026-11-03 — Workflow records recovered and Stage 2 independently reviewed
+- Confirmed Stage 1 Reference Reconstruction Version 1.5 as complete from the project handoff.
+- Recorded the actual repository architecture inspection in `STAGE_1_ARCHITECTURE_INSPECTION.md`.
+- Added `WORKFLOW_REGISTER.md` as the canonical navigation/status record for all five stages.
+- Completed the Stage 2 Critical Reviewer challenge and recorded CR-01–CR-19, Goldfish persona findings and Stage 3 resolution requirements in `STAGE_2_CRITICAL_REVIEW.md`.
+- Stage 2 outcome: **not approved as-is**; Stage 3 must resolve the listed decisions.
+- No application code, Firebase data, production records or deployment settings were changed.
+- Stage 3 has **not** started. Stage 4 approval and Stage 5 implementation remain unauthorized.
