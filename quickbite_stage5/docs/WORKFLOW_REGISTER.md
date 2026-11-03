@@ -45,8 +45,8 @@ Required personas: first-time visitor, guest customer, registered customer, retu
 |---|---|---|
 | Stage 1 — Reference Reconstruction | `docs/REFERENCE_DESIGN_SPEC.md` plus Version 1.5 handoff | COMPLETE |
 | Stage 1 — Actual Architecture Inspection | `docs/STAGE_1_ARCHITECTURE_INSPECTION.md` | COMPLETE |
-| Stage 2 — Critical Reviewer | `docs/STAGE_2_CRITICAL_REVIEW.md` | COMPLETE — review recorded; user has not authorized Stage 3 |
-| Stage 3 — Improvement | To be recorded when begun | NOT STARTED |
+| Stage 2 — Critical Reviewer | `docs/STAGE_2_CRITICAL_REVIEW.md` | COMPLETE — review recorded |
+| Stage 3 — Improvement | `docs/STAGE_3_IMPROVED_ARCHITECTURE.md` | COMPLETE — consolidated architecture, 29 requirements, 32 acceptance tests |
 | Stage 4 — Approval | To be recorded when prepared | NOT STARTED |
 | Stage 5 — Implementation | To be recorded when authorized | NOT STARTED |
 
@@ -57,6 +57,13 @@ Required personas: first-time visitor, guest customer, registered customer, retu
 - If GitHub cannot be updated, state that clearly and do not claim persistence.
 - This repository is the durable source of truth for project workflow records. ChatGPT's internal Memory cannot be directly edited by a repository commit; use this register as the recovery point when continuing in a new chat.
 
+## Current authorization state
+- Stage 1: complete.
+- Stage 2: complete.
+- Stage 3: complete.
+- Stage 4: not started; final implementation authorization package not yet approved.
+- Stage 5: not authorized; no implementation may begin.
+
 ## Supporting project records
 - `docs/PROJECT_BRIEF.md`
 - `docs/MANDATORY_RULES.md`
@@ -65,4 +72,5 @@ Required personas: first-time visitor, guest customer, registered customer, retu
 - `docs/SECURITY.md`
 - `docs/QA_GOLDFISH.md`
 - `docs/REFERENCE_DESIGN_SPEC.md`
+- `docs/STAGE_3_IMPROVED_ARCHITECTURE.md`
 - `docs/CHANGELOG.md`
