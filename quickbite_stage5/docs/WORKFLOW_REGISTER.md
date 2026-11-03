@@ -47,8 +47,8 @@ Required personas: first-time visitor, guest customer, registered customer, retu
 | Stage 1 — Actual Architecture Inspection | `docs/STAGE_1_ARCHITECTURE_INSPECTION.md` | COMPLETE |
 | Stage 2 — Critical Reviewer | `docs/STAGE_2_CRITICAL_REVIEW.md` | COMPLETE — review recorded |
 | Stage 3 — Improvement | `docs/STAGE_3_IMPROVED_ARCHITECTURE.md` | COMPLETE — consolidated architecture, 29 requirements, 32 acceptance tests |
-| Stage 4 — Approval | To be recorded when prepared | NOT STARTED |
-| Stage 5 — Implementation | To be recorded when authorized | NOT STARTED |
+| Stage 4 — Approval | docs/STAGE_4_IMPLEMENTATION_AUTHORIZATION.md | COMPLETE — historical broad authorization retained; current active scope clarified as UI testing only |
+| Stage 5 — UI Testing Milestone | docs/UI_MILESTONE_GOLDFISH_REPORT.md | IN PROGRESS — UI-only source refinements committed; interaction/visual verification outstanding |
 
 ## Stage transition rules
 - Do not advance stages automatically.
@@ -61,8 +61,8 @@ Required personas: first-time visitor, guest customer, registered customer, retu
 - Stage 1: complete.
 - Stage 2: complete.
 - Stage 3: complete.
-- Stage 4: not started; final implementation authorization package not yet approved.
-- Stage 5: not authorized; no implementation may begin.
+- Stage 4: complete; original authorization history retained.
+- Stage 5: active authorization is UI Testing Milestone only. Firebase/backend, production data, real orders, payments and deployment remain excluded.
 
 ## Supporting project records
 - `docs/PROJECT_BRIEF.md`
