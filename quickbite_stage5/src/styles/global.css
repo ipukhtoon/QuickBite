@@ -285,3 +285,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 @media(min-width:700px){.welcome{display:grid;align-items:center;padding-top:32px;padding-bottom:32px}.welcome__inner{width:min(100%,470px)}.welcome__image{height:290px}.auth-page{display:grid;align-items:center}.auth-wrap{width:min(100%,430px)}}
 @media(max-height:760px) and (max-width:699px){.welcome__hero{margin-top:15px}.welcome__image{height:205px}.welcome__copy{padding-top:17px}.welcome__copy h1{font-size:34px}.welcome__actions{margin-top:15px}.auth-wrap>.brand{margin-bottom:12px}.auth-card{padding-top:19px;padding-bottom:17px}}
 @media(prefers-reduced-motion:reduce){.welcome *,.auth-page *{animation:none!important;transition:none!important}}
+
+
+/* UI milestone refinement — use real demo food photography in the home hero. */
+.home-hero__art { position: relative; overflow: hidden; isolation: isolate; }
+.home-hero__art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; transform: rotate(12deg) scale(1.08); }
+.home-hero__art::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(135deg, #1b100c20, #1b100c70); pointer-events: none; }
+.category-tile img { box-shadow: 0 5px 18px #0005; }
+.food-card__image img, .product-detail__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.food-card__image img { transition: transform .25s ease; }
+@media (hover:hover) and (pointer:fine) { .food-card:hover .food-card__image img { transform: scale(1.035); } }
