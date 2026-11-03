@@ -1,0 +1,53 @@
+name: Integrate QuickBite Design Assets
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "quickbite-source.zip"
+      - ".github/workflows/integrate-design-assets.yml"
+permissions:
+  contents: write
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate and extract supplied design assets
+        run: |
+          set -euo pipefail
+          unzip -t quickbite-source.zip
+          rm -rf /tmp/qb-design
+          mkdir -p /tmp/qb-design
+          unzip -q quickbite-source.zip -d /tmp/qb-design
+          test -s /tmp/qb-design/public/images/welcome-burger.png
+          python -m pip install --quiet Pillow
+      - name: Optimize local food photography
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import os
+          source=Path('/tmp/qb-design/public/images')
+          target=Path('quickbite_stage5/public/images')
+          target.mkdir(parents=True, exist_ok=True)
+          for path in sorted(source.glob('*.png')):
+              image=Image.open(path).convert('RGB')
+              image.thumbnail((1500,1500), Image.Resampling.LANCZOS)
+              image.save(target/(path.stem+'.webp'), 'WEBP', quality=84, method=6)
+              print(path.name, '->', (target/(path.stem+'.webp')).stat().st_size)
+          PY
+      - name: Commit optimized local assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add quickbite_stage5/public/images
+          if git diff --cached --quiet; then
+            echo "No asset changes."
+          else
+            git commit -m "Add optimized local QuickBite design photography"
+            git push
+          fi
