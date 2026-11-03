@@ -1,0 +1,62 @@
+/* QuickBite source-design port.
+   Values and visual language are transcribed from design-reference/original/app/globals.css
+   and design-reference/original/components/quickbite-screens.tsx.
+   Kept separate from functional styles so the source-derived visual layer is auditable. */
+:root{
+  --bg:#100a06;--surface:#17100b;--raised:#21160d;--panel:#25170d;
+  --orange:#ff9d23;--orange-deep:#ff6f16;--gold:#ffb13a;
+  --muted:#ffffffb8;--line:#ffffff1a;
+  --source-glow:radial-gradient(ellipse at 70% 18%,rgba(117,54,18,.20),transparent 42%);
+}
+html,body,#app{background:#100a06;color:#fff}
+body{font-family:Arial,Helvetica,sans-serif}
+.qb-app{background:var(--source-glow),#100a06}
+.topbar{background:rgba(16,10,6,.96);border-color:rgba(255,255,255,.08)}
+.brand strong{letter-spacing:-.7px}
+.burger-mark{color:#ff9d23}
+.primary,.offer button{
+ background:linear-gradient(105deg,#ff9d23 0%,#ff6f16 100%);
+ color:#251306;border:1px solid rgba(255,174,67,.28);
+ box-shadow:0 5px 18px rgba(255,126,22,.16)
+}
+.secondary{background:linear-gradient(135deg,#302014,#17100b);border-color:rgba(255,255,255,.12)}
+.auth-screen{
+ background:radial-gradient(ellipse at 50% 40%,rgba(122,57,20,.25),transparent 60%),#100a06
+}
+.auth-form input,.new-item input,.new-item select,.page textarea{
+ background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.12);
+ border-radius:10px
+}
+.search{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.10)}
+.offer{
+ border-color:rgba(255,157,35,.38);
+ background:linear-gradient(110deg,#211107 0%,#68300d 100%);
+ border-radius:14px
+}
+.categories img{border-color:rgba(255,157,35,.45)}
+.categories.pills button.selected,.categories.pills button:active{
+ background:linear-gradient(90deg,#ff9d23,#ff6f16);border-color:#ff9d23;color:#251306
+}
+.food-card,.cart-row,.order-row,.manage-row{
+ background:linear-gradient(100deg,rgba(33,22,13,.96),rgba(21,16,11,.96));
+ border-color:rgba(255,255,255,.09);border-radius:12px
+}
+.food-card strong,.cart-row strong,.order-row strong,.product-buy strong{color:#ffb13a}
+.add{background:linear-gradient(135deg,#ff9d23,#ff6f16);color:#251306}
+.product-hero{border-radius:14px}
+.rating{color:#ffaf24}
+.quantity button,.stepper button,.choice-row button,.option{
+ background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.12)
+}
+.choice-row button.selected,.option.selected{
+ border-color:rgba(255,154,37,.55);background:rgba(255,142,32,.10)
+}
+.bill{background:linear-gradient(135deg,#21160d,#15100b);border-color:rgba(255,255,255,.10)}
+.bill h3{color:#ffbe54}
+.timeline{border-color:#9c571d}
+.time-step:before{background:#ff9126}
+.time-step.done:before{background:#3b9850}
+.arrival{background:linear-gradient(110deg,#22160d,#15100b);color:#ff9d23}
+.bottom-nav{background:rgba(16,10,6,.97);border-color:rgba(255,255,255,.10);backdrop-filter:blur(14px)}
+.toast{background:linear-gradient(100deg,#ff9d23,#ff6f16);color:#251306}
+@media(min-width:700px){.qb-app{background:var(--source-glow),#100a06}}
