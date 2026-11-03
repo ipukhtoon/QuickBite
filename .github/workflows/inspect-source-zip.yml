@@ -1,0 +1,40 @@
+name: Inspect QuickBite Design Source ZIP
+on:
+  push:
+    branches: [main]
+    paths:
+      - "quickbite-source.zip"
+      - ".github/workflows/inspect-source-zip.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and inspect source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s quickbite-source.zip
+          unzip -t quickbite-source.zip
+          echo "=== ARCHIVE FILE LIST ==="
+          unzip -Z1 quickbite-source.zip | tee /tmp/source-files.txt
+          echo "=== ARCHIVE ROOTS ==="
+          unzip -Z1 quickbite-source.zip | awk -F/ 'NF {print $1}' | sort -u
+          mkdir -p /tmp/quickbite-source
+          unzip -q quickbite-source.zip -d /tmp/quickbite-source
+          echo "=== PROJECT MANIFESTS ==="
+          find /tmp/quickbite-source -type f \( -name package.json -o -name vite.config.js -o -name README.md -o -name index.html -o -name "*.fig" -o -name "*.json" \) | head -200
+          echo "=== ARCHIVE SUMMARY ==="
+          du -sh /tmp/quickbite-source
+          find /tmp/quickbite-source -type f | wc -l
+      - name: Preserve extracted source for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: quickbite-source-review
+          path: /tmp/quickbite-source/
+          if-no-files-found: error
+          retention-days: 7
