@@ -1,1 +1,0 @@
-@media(min-width:900px){.admin-side{display:flex;position:fixed;left:max(0px,calc((100vw - 480px)/2 - 210px));top:25px;width:190px;flex-direction:column;gap:20px;padding:18px;background:#1b120c;border:1px solid #4b3322;border-radius:14px}.admin-side a{padding:10px;color:#c6b5a5}.admin-side .brand{margin-bottom:20px}.admin-main{padding:20px}}
