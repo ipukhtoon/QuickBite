@@ -1,4 +1,4 @@
-name: Original QuickBite Cloud Build
+name: QuickBite GitHub Pages
 
 on:
   workflow_dispatch:
@@ -11,20 +11,25 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
 
 jobs:
-  build-original-source:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
-      - name: Checkout repository
+      - name: Checkout deployment branch
         uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: ''
 
       - name: Enable pnpm
         uses: pnpm/action-setup@v4
@@ -39,10 +44,72 @@ jobs:
           test -f original-source/pnpm-lock.yaml
           test -f original-source/app/page.tsx
 
+      - name: Configure static export for GitHub Pages
+        working-directory: original-source
+        run: |
+          cat > next.config.mjs <<'EOF'
+          /** @type {import('next').NextConfig} */
+          const nextConfig = {
+            output: 'export',
+            basePath: '/QuickBite',
+            trailingSlash: true,
+            typescript: {
+              ignoreBuildErrors: true,
+            },
+            images: {
+              unoptimized: true,
+            },
+          }
+
+          export default nextConfig
+          EOF
+
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('components/quickbite-screens.tsx')
+          source = path.read_text()
+          old = """function FoodPhoto({ src = '/images/classic-burger.png', alt, className = '' }: { src?: string; alt: string; className?: string }) {
+            return <img src={src} alt={alt} className={`object-cover ${className}`} />
+          }"""
+          new = """function FoodPhoto({ src = '/images/classic-burger.png', alt, className = '' }: { src?: string; alt: string; className?: string }) {
+            const pageBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
+            const assetSrc = src.startsWith('/') ? pageBasePath + src : src
+            return <img src={assetSrc} alt={alt} className={'object-cover ' + className} />
+          }"""
+          if old not in source:
+              raise SystemExit('Expected FoodPhoto component was not found; refusing an unsafe patch.')
+          path.write_text(source.replace(old, new, 1))
+          PY
+
       - name: Install locked dependencies
         working-directory: original-source
         run: pnpm install --frozen-lockfile
 
-      - name: Build original Next.js application
+      - name: Build static website
         working-directory: original-source
+        env:
+          NEXT_PUBLIC_BASE_PATH: /QuickBite
         run: pnpm build
+
+      - name: Verify exported website
+        run: |
+          test -f original-source/out/index.html
+          test -d original-source/out/_next
+          test -d original-source/out/images
+          test -f original-source/out/images/welcome-burger.png
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: original-source/out
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
