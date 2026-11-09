@@ -118,6 +118,18 @@ export class CartStore {
     });
   }
 
+  adjustQuantity(lineKey, delta) {
+    return this.runMutation(async () => {
+      const lines = await this.read();
+      const line = lines.find((item) => item.lineKey === lineKey);
+      if (!line || !Number.isInteger(delta)) return lines;
+      const quantity = Math.min(99, Math.max(0, line.quantity + delta));
+      if (quantity === 0) return this.write(lines.filter((item) => item.lineKey !== lineKey));
+      line.quantity = quantity;
+      return this.write(lines);
+    });
+  }
+
   remove(lineKey) {
     return this.runMutation(async () => {
       const lines = await this.read();
