@@ -8,7 +8,7 @@
 - Stage 2 — Critical Reviewer: COMPLETE
 - Stage 3 — Improvement: COMPLETE
 - Stage 4 — Approval: APPROVED BY USER — 2026-11-10
-- Stage 5 — Implementation: IN PROGRESS (responsive foundation, local cart preview and product options; Vite CI build passed for product-options source revision; interaction testing outstanding, interaction testing outstanding)
+- Stage 5 — Implementation: IN PROGRESS (responsive foundation, local cart preview, product options and Firebase/security foundation; Vite CI build passed; emulator/security and interaction testing outstanding, interaction testing outstanding)
 
 ## Design authority
 food_delivery_ui.html is the sole visual design authority. Preserve its coral/red, white and light-gray visual language and Plus Jakarta Sans typography.
@@ -41,7 +41,8 @@ A responsive Vite frontend foundation, combined demo catalogue filtering and Ind
 - Independent initial QA findings are recorded in docs/QA/GOLDFISH_STAGE_5.md.
 - GitHub Actions run #35 passed the Vite production build for the product-options source revision. Browser/device interaction testing remains outstanding.
 - Product details/options preview and option-specific cart variants are implemented from demo configuration only.
-- Next: prepare Firebase client configuration, Firestore schema/security rules and real catalogue data contracts; do not provision a production project without separate authorization.
+- Firebase SDK/client services, catalogue read repository, initial Firestore/Storage rules, indexes and emulator configuration are present; no Firebase project has been provisioned and rules have not been emulator-tested.
+- Next: add automated Firebase Emulator security tests and integrate the configured catalogue repository behind safe preview behavior; no production Firebase provisioning without separate authorization.
 - No production Firebase provisioning, live data migration, payment gateway activation or deployment is authorized.
 - Unknown restaurant-specific values must remain configurable and must not be fabricated.
 - Goldfish must independently inspect implementation evidence and report untested interactions honestly.
