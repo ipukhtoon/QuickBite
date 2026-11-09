@@ -110,11 +110,12 @@ Goldfish did not modify source code, Firebase, repository data or production rec
 - **Finding:** Cart lines and quantities persist in IndexedDB, but the catalogue and prices are hardcoded demonstration values. There is no server-side price revalidation, order creation, user ownership or cross-device synchronization.
 - **Goldfish assessment:** This is acceptable as an interim UI foundation only. Keep checkout disabled until authoritative restaurant data and trusted backend validation exist.
 
-### GF-S5-011 — Automated build initially failed; correction awaiting confirmation
-- **Severity:** Medium
-- **Evidence:** VERIFIED BY SOURCE (workflow logs)
+### GF-S5-011 — Automated build initially failed; corrected and CI-verified
+- **Severity:** Resolved implementation defect; retain regression monitoring
+- **Evidence:** VERIFIED BY SOURCE (GitHub Actions job steps and logs)
 - **Finding:** Initial GitHub Actions build failed because top-level await was unsupported by Vite's configured browser target. Application initialization was changed to an async bootstrap function.
-- **Status:** POTENTIAL ISSUE pending the next CI run; do not claim fixed until the new run passes.
+- **Retest:** GitHub Actions run #12 completed successfully; dependency installation and `npm run build` both passed for implementation commit `4ef2a3060c026121d519b4aa8173b0575315d944`.
+- **Status:** Corrected and build-verified. This does not constitute browser/device interaction verification.
 
 ### Updated persona simulation
 
