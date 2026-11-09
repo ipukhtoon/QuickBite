@@ -88,3 +88,45 @@
 The initial repository foundation is a valid first implementation step, but it is **not a functioning food-ordering application**. The most urgent next work is to replace the static demo behavior with real screen/state architecture while preserving the reference visual design. Do not represent the app as production-ready.
 
 Goldfish did not modify source code, Firebase, repository data or production records.
+
+
+## Follow-up inspection — modular catalogue and cart phase
+
+### GF-S5-008 — Cart and order history separation
+- **Severity:** Low (design safeguard verified)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** The header Cart button opens the cart preview. The Orders navigation item no longer opens the cart and instead explains that order history is not implemented.
+- **Goldfish assessment:** This corrects the earlier conceptual collision between basket and placed orders. Real order history remains NOT IMPLEMENTED.
+
+### GF-S5-009 — Combined catalogue filtering and native category controls
+- **Severity:** Low (source-level improvement verified)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Search and category state are applied together by one filtering function. Category chips are native buttons and expose `aria-pressed` state.
+- **Limitation:** Actual keyboard/screen-reader behavior has not been tested in a browser.
+
+### GF-S5-010 — Local cart preview is not a production order cart
+- **Severity:** High if misrepresented; currently mitigated by explicit preview labeling and disabled checkout
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Cart lines and quantities persist in IndexedDB, but the catalogue and prices are hardcoded demonstration values. There is no server-side price revalidation, order creation, user ownership or cross-device synchronization.
+- **Goldfish assessment:** This is acceptable as an interim UI foundation only. Keep checkout disabled until authoritative restaurant data and trusted backend validation exist.
+
+### GF-S5-011 — Automated build initially failed; correction awaiting confirmation
+- **Severity:** Medium
+- **Evidence:** VERIFIED BY SOURCE (workflow logs)
+- **Finding:** Initial GitHub Actions build failed because top-level await was unsupported by Vite's configured browser target. Application initialization was changed to an async bootstrap function.
+- **Status:** POTENTIAL ISSUE pending the next CI run; do not claim fixed until the new run passes.
+
+### Updated persona simulation
+
+| Persona | Current result |
+|---|---|
+| First-time visitor | Can inspect sample catalogue; restaurant details are not configured |
+| Guest customer | Can add/remove sample cart lines locally; checkout unavailable |
+| Registered customer | Sign-in/account journeys not implemented |
+| Returning customer | Local cart persistence is designed; reload behavior not interaction-tested |
+| Restaurant administrator | Admin interface not implemented |
+| Restaurant staff | Staff queue not implemented |
+| Beginner | Preview labels and empty/notice feedback exist in source; usability not interaction-tested |
+| Android user | Responsive/safe-area CSS exists; real device test NOT TESTABLE |
+
+Goldfish did not modify source files, Firebase, production data or repository implementation.
