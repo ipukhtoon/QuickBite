@@ -20,7 +20,7 @@ export async function initCart() {
   function makeButton(label, text, action, productId) {
     const button = document.createElement('button');
     button.type = 'button'; button.className = 'quantity-button'; button.textContent = text;
-    button.setAttribute('aria-label', label); button.dataset.cartAction = action; button.dataset.productId = productId;
+    button.setAttribute('aria-label', label); button.dataset.cartAction = action; button.dataset.lineKey = productId;
     return button;
   }
 
@@ -40,13 +40,14 @@ export async function initCart() {
       const details = document.createElement('div'); details.className = 'cart-line-details';
       const title = document.createElement('strong'); title.textContent = line.name;
       const description = document.createElement('span'); description.textContent = line.description;
+      const options = document.createElement('span'); options.className = 'cart-line-options'; options.textContent = line.optionSummary || ''; options.hidden = !line.optionSummary;
       const price = document.createElement('span'); price.className = 'cart-line-price'; price.textContent = money(line.priceMinor * line.quantity);
       const controls = document.createElement('div'); controls.className = 'quantity-controls';
       controls.append(makeButton('Decrease quantity', '−', 'decrease', line.productId));
       const quantity = document.createElement('span'); quantity.textContent = String(line.quantity); quantity.setAttribute('aria-live', 'polite');
       controls.append(quantity, makeButton('Increase quantity', '+', 'increase', line.productId));
       const remove = makeButton('Remove item', 'Remove', 'remove', line.productId); remove.classList.add('remove-line');
-      details.append(title, description, price, controls, remove); row.append(image, details); linesElement.append(row);
+      details.append(title, description, options, price, controls, remove); row.append(image, details); linesElement.append(row);
     });
     subtotalElement.textContent = money(subtotal);
   }
@@ -56,11 +57,11 @@ export async function initCart() {
   document.addEventListener('quickbite:open-cart', async () => { await render(); dialog.showModal(); });
   linesElement.addEventListener('click', async (event) => {
     const button = event.target.closest('[data-cart-action]'); if (!button) return;
-    const id = button.dataset.productId;
-    const line = (await store.read()).find((item) => item.productId === id);
-    if (button.dataset.cartAction === 'remove') await store.remove(id);
-    if (button.dataset.cartAction === 'increase' && line) await store.setQuantity(id, line.quantity + 1);
-    if (button.dataset.cartAction === 'decrease' && line) await store.setQuantity(id, line.quantity - 1);
+    const lineKey = button.dataset.lineKey;
+    const line = (await store.read()).find((item) => item.lineKey === lineKey);
+    if (button.dataset.cartAction === 'remove') await store.remove(lineKey);
+    if (button.dataset.cartAction === 'increase' && line) await store.setQuantity(lineKey, line.quantity + 1);
+    if (button.dataset.cartAction === 'decrease' && line) await store.setQuantity(lineKey, line.quantity - 1);
     await render();
   });
   dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
