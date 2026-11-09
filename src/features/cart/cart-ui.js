@@ -1,6 +1,6 @@
 import { CartStore } from './cart-store.js';
 
-const money = (minor) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(minor / 100);
+const money = (minor) => `${(minor / 100).toFixed(2)} demo units`;
 
 export async function initCart() {
   const dialog = document.getElementById('cartDialog');
@@ -13,8 +13,8 @@ export async function initCart() {
   try { store = await CartStore.create(); }
   catch (error) {
     const notice = document.getElementById('appNotice');
-    if (notice) { notice.textContent = 'Local cart storage is unavailable. Please use a browser with site storage enabled.'; notice.hidden = false; }
-    return { add: () => {} };
+    if (notice) { notice.textContent = 'Local cart storage is unavailable. Please enable browser site storage and reload.'; notice.hidden = false; }
+    return { add: async () => { if (notice) { notice.textContent = 'Your item could not be saved because local cart storage is unavailable.'; notice.hidden = false; } } };
   }
 
   function makeButton(label, text, action, productId) {
