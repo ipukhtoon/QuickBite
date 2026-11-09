@@ -92,7 +92,7 @@
 
 ## Phase 3 — Product details and configurable option preview
 
-**Status: IMPLEMENTED IN REPOSITORY; LATEST CI BUILD PENDING**
+**Status: IMPLEMENTED IN REPOSITORY; VITE BUILD PASSED IN GITHUB ACTIONS**
 
 ### Changes
 - Added a product customization dialog and responsive styling.
@@ -116,7 +116,8 @@
 
 ### Verification and limitations
 - Source-level inspection confirms product option configuration, validation, price-delta calculation, cart option snapshots and option-specific cart-line operations are connected.
-- GitHub Actions build runs for the latest product-options commits are queued; update this record only after a completed run is checked.
+- GitHub Actions run #35 completed successfully, including dependency installation and `npm run build`, for implementation commit `0b1fad63e1c674b78a1dc1284b2220e9e8df68ab`.
+- The subsequent documentation-only commits did not change application source. The latest application-source revision is included in the successful build run.
 - No browser interaction, visual or Android device testing is claimed.
 - All option data and prices remain demonstration content. The backend must later validate option IDs, availability and prices authoritatively.
 
