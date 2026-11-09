@@ -62,7 +62,7 @@ Project planning, implementation and QA milestones.
 - Routed all catalogue add controls through option selection.
 - Persisted option snapshots and distinct product variants in the IndexedDB cart.
 - Added source-level Goldfish review and documented untested browser/IndexedDB behavior.
-- Latest GitHub Actions verification is pending.
+- GitHub Actions run #35 passed the Vite production build for the product-options implementation revision.
 
 ### Product options build verification
 - GitHub Actions run #35 passed `npm run build` for the product-options implementation revision.
