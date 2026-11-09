@@ -45,31 +45,5 @@ export function initCatalogue({ onAdd }) {
     applyFilters();
   });
 
-  grid?.addEventListener('click', async (event) => {
-    const button = event.target.closest('[data-add-to-cart]');
-    if (!button) return;
-    const card = button.closest('.food-card');
-    if (!card) return;
-    const price = Number(card.dataset.price);
-    if (!Number.isFinite(price) || price < 0) return;
-    try {
-      await onAdd({
-        id: card.dataset.id,
-        name: card.dataset.name,
-        description: card.querySelector('.food-desc')?.textContent?.trim() || '',
-        priceMinor: Math.round(price * 100),
-        image: card.querySelector('img')?.getAttribute('src') || '',
-      });
-    } catch (error) {
-      window.dispatchEvent(new CustomEvent('quickbite:notice', { detail: 'We could not save this item to your cart. Please try again.' }));
-      return;
-    }
-    button.classList.add('added');
-    button.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>';
-    window.setTimeout(() => {
-      button.classList.remove('added');
-      button.innerHTML = '<i class="fa-solid fa-plus" aria-hidden="true"></i>';
-    }, 700);
-  });
   applyFilters();
 }
