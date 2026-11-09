@@ -1,11 +1,13 @@
 import { initCatalogue } from '../features/catalogue/catalogue.js';
 import { initCart } from '../features/cart/cart-ui.js';
 import { initProductDetails } from '../features/product/product-details.js';
+import { initAuthUI } from '../features/auth/auth-ui.js';
 
 async function bootstrap() {
   const cart = await initCart();
   initCatalogue();
   initProductDetails({ onAdd: (product) => cart.add(product) });
+  initAuthUI();
 }
 
 bootstrap().catch((error) => {
