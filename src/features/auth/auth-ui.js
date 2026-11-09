@@ -70,6 +70,7 @@ export function initAuthUI() {
         const signedIn = Boolean(user);
         guestPanel.hidden = signedIn;
         signedInPanel.hidden = !signedIn;
+        document.getElementById('accountCloseAction').textContent = signedIn ? 'Close' : 'Continue as guest';
         if (signedIn) {
           document.getElementById('accountDisplayName').textContent = user.displayName || 'QuickBite customer';
           document.getElementById('accountEmail').textContent = user.email || '';
