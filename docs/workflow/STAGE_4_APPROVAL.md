@@ -271,9 +271,9 @@ Unresolved restaurant inputs may be represented as configurable settings and saf
 
 ## 14. Explicit approval required
 
-**Current status: AWAITING USER APPROVAL.**
+**Current status: APPROVED BY USER — 2026-11-10.**
 
-No Stage 5 implementation begins until the user explicitly approves this plan. Requested material changes must be incorporated and re-presented before implementation.
+The user explicitly approved this plan and authorized Stage 5 on 2026-11-10. Material changes outside the approved scope must be re-presented for approval.
 
 
 ## 13. Approval record
