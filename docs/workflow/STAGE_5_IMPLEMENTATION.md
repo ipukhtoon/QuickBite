@@ -53,6 +53,41 @@
 - No real authentication, persistence, checkout, orders, admin/staff operations, Firebase integration or security rules exist yet.
 - These are outstanding approved requirements, not completed functionality.
 
+## Phase 2 — Modular customer catalogue and local cart preview
+
+**Status: IMPLEMENTED IN REPOSITORY; CI BUILD VERIFICATION PENDING**
+
+### Changes
+- Extracted design tokens and styles into `src/styles/tokens.css` and `src/styles/main.css`.
+- Added ES-module application bootstrap in `src/app/main.js`.
+- Added combined search/category filtering in `src/features/catalogue/catalogue.js`.
+- Converted category chips to native buttons with pressed-state semantics.
+- Added IndexedDB-backed cart draft storage in `src/features/cart/cart-store.js`.
+- Added cart preview UI with add, quantity increase/decrease, remove, subtotal and empty states in `src/features/cart/cart-ui.js`.
+- Added distinct header Cart access; Orders no longer opens the cart and instead explains that order history is not yet available.
+- Added honest preview labels, removed fabricated location and promotional-success claims, and disabled checkout until real restaurant configuration/backend exist.
+- Added GitHub Actions Vite build workflow at `.github/workflows/build.yml`.
+- Added error feedback for cart storage and app initialization failures.
+
+### Files
+- `index.html`
+- `src/app/main.js`
+- `src/styles/tokens.css`
+- `src/styles/main.css`
+- `src/features/catalogue/catalogue.js`
+- `src/features/cart/cart-store.js`
+- `src/features/cart/cart-ui.js`
+- `.github/workflows/build.yml`
+
+### Verification and known limitations
+- GitHub source files were fetched after writing and inspected; module paths, HTML hooks and the preservation of `food_delivery_ui.html` were checked by source inspection.
+- GitHub Actions was configured to install Vite and run `npm run build` on pushes and pull requests.
+- The first build run failed because the browser target does not support top-level await. This was corrected by moving initialization into an async bootstrap function.
+- A subsequent build run is pending; do not mark the build passed until GitHub Actions reports success.
+- No browser interaction, visual screenshot or Android device test has been performed.
+- Cart contents are local preview data only. The sample catalogue is hardcoded, prices are illustrative demo units, and checkout remains disabled.
+- Authentication, Firebase, trusted order processing, order history, saved items, profile and admin/staff screens remain outstanding.
+
 ## Remaining implementation phases
 
 1. Extract and formalize the design system; modularize the customer UI while matching the reference.
