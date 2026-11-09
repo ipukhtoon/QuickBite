@@ -12,7 +12,7 @@ const config = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const requiredConfig = ['apiKey', 'authDomain', 'projectId', 'appId'];
+const requiredConfig = Object.keys(config);
 
 export function isFirebaseConfigured() {
   return requiredConfig.every((key) => typeof config[key] === 'string' && config[key].trim().length > 0);
