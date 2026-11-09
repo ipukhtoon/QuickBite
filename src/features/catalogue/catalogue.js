@@ -1,9 +1,4 @@
-import {
-  fetchActiveCategories,
-  fetchActiveProducts,
-  fetchPublicSettings,
-} from '../../services/catalogue/catalogue-repository.js';
-import { isFirebaseConfigured } from '../../services/firebase/client.js';
+import { isFirebaseConfigured } from '../../services/firebase/config.js';
 
 function formatCurrency(minor, currencyCode) {
   return new Intl.NumberFormat(undefined, {
@@ -145,10 +140,11 @@ export function initCatalogue() {
 
   (async () => {
     try {
+      const repository = await import('../../services/catalogue/catalogue-repository.js');
       const [settings, categories, products] = await Promise.all([
-        fetchPublicSettings(),
-        fetchActiveCategories(),
-        fetchActiveProducts(),
+        repository.fetchPublicSettings(),
+        repository.fetchActiveCategories(),
+        repository.fetchActiveProducts(),
       ]);
       const allLabel = createCategoryChip({ id: 'all', name: 'All', icon: '🍽️' }, true);
       chipsContainer.replaceChildren(allLabel, ...categories.map((category) => createCategoryChip(category)));
