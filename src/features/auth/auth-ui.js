@@ -24,6 +24,7 @@ export function initAuthUI() {
   const signInTab = document.querySelector('[data-auth-view="signin"]');
   const registerTab = document.querySelector('[data-auth-view="register"]');
   const signInEmail = document.getElementById('signInEmail');
+  const retryProfileSyncButton = document.getElementById('retryProfileSync');
   let profileSyncUid = null;
 
   function showMessage(text, isError = false) {
@@ -77,12 +78,16 @@ export function initAuthUI() {
           document.getElementById('accountEmail').textContent = user.email || '';
           if (profileSyncUid !== user.uid) {
             profileSyncUid = user.uid;
+            retryProfileSyncButton.hidden = true;
             auth.ensureCustomerProfile().catch(() => {
-              showMessage('You are signed in, but your customer profile could not be synchronized. Please try again later.', true);
+              profileSyncUid = null;
+              retryProfileSyncButton.hidden = false;
+              showMessage('You are signed in, but your customer profile could not be synchronized.', true);
             });
           }
         } else {
           profileSyncUid = null;
+          retryProfileSyncButton.hidden = true;
         }
       }, () => showMessage('Your sign-in state could not be checked. Please reload.', true));
 
@@ -138,6 +143,21 @@ export function initAuthUI() {
           showMessage('If an account exists for that email, a password reset message has been sent.');
         } catch (error) {
           showMessage(friendlyError(error), true);
+        }
+      });
+
+      retryProfileSyncButton.addEventListener('click', async () => {
+        retryProfileSyncButton.disabled = true;
+        showMessage('Retrying profile setup…');
+        try {
+          await auth.ensureCustomerProfile();
+          profileSyncUid = null;
+          retryProfileSyncButton.hidden = true;
+          showMessage('Your customer profile is ready.');
+        } catch (error) {
+          showMessage('Profile setup is still unavailable. Please try again later.', true);
+        } finally {
+          retryProfileSyncButton.disabled = false;
         }
       });
 
