@@ -90,6 +90,36 @@
 - Cart contents are local preview data only. The sample catalogue is hardcoded, prices are illustrative demo units, and checkout remains disabled.
 - Authentication, Firebase, trusted order processing, order history, saved items, profile and admin/staff screens remain outstanding.
 
+## Phase 3 — Product details and configurable option preview
+
+**Status: IMPLEMENTED IN REPOSITORY; LATEST CI BUILD PENDING**
+
+### Changes
+- Added a product customization dialog and responsive styling.
+- Added demonstration option groups for the four sample catalogue items.
+- Implemented required single-select groups and optional multi-select groups with minimum/maximum validation.
+- Implemented option price deltas using integer demo units and live preview totals.
+- Routed both Customize and plus controls through the product options dialog so required choices cannot be bypassed by the catalogue add action.
+- Added option labels and option-specific line keys to the local cart so distinct configurations remain separate cart lines.
+- Added normalization for earlier local cart records without option-specific keys.
+
+### Files
+- `index.html`
+- `src/app/main.js`
+- `src/features/catalogue/catalogue.js`
+- `src/features/catalogue/demo-options.js`
+- `src/features/product/product-details.js`
+- `src/features/product/product-details.css`
+- `src/features/cart/cart-store.js`
+- `src/features/cart/cart-ui.js`
+- `src/styles/main.css`
+
+### Verification and limitations
+- Source-level inspection confirms product option configuration, validation, price-delta calculation, cart option snapshots and option-specific cart-line operations are connected.
+- GitHub Actions build runs for the latest product-options commits are queued; update this record only after a completed run is checked.
+- No browser interaction, visual or Android device testing is claimed.
+- All option data and prices remain demonstration content. The backend must later validate option IDs, availability and prices authoritatively.
+
 ## Remaining implementation phases
 
 1. Extract and formalize the design system; modularize the customer UI while matching the reference.
