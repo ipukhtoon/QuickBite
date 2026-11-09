@@ -430,3 +430,6 @@
 @media(max-width:420px){.cart-dialog{padding:17px}.cart-dialog-footer{align-items:stretch;flex-direction:column}.cart-dialog-footer button{width:100%}.header-cart span:nth-child(2){display:none}}
 
 .app-notice{padding:12px 14px;margin:0 0 16px;border:1px solid #f1c7cb;border-radius:13px;background:#fff0f1;color:#8b2631;font-size:12px;line-height:1.5}
+
+.category-chip{border:0;text-align:center;flex-shrink:0}
+.app-notice{padding:12px 14px;margin:0 0 16px;border:1px solid #f1c7cb;border-radius:13px;background:#fff0f1;color:#8b2631;font-size:12px;line-height:1.5}
