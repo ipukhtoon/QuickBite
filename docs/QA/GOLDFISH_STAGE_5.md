@@ -131,3 +131,28 @@ Goldfish did not modify source code, Firebase, repository data or production rec
 | Android user | Responsive/safe-area CSS exists; real device test NOT TESTABLE |
 
 Goldfish did not modify source files, Firebase, production data or repository implementation.
+
+
+## Follow-up inspection — product customization phase
+
+### GF-S5-012 — Product options are demo configuration, not authoritative menu data
+- **Severity:** High if used for real orders; mitigated while checkout remains disabled
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Product option groups and price deltas are hardcoded in `demo-options.js` for four sample products. No backend catalogue or server validation exists.
+- **Recommendation:** Keep the explicit preview state and disabled checkout. When Firebase/backend work begins, validate product/option IDs, active status, required selections, quantity and current price on the trusted server.
+
+### GF-S5-013 — Required option selection and cart variant separation
+- **Severity:** Medium
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Product dialog preselects one choice in required single-select groups, validates min/max selection counts and stores option snapshots. Cart line keys include product ID plus sorted option IDs, allowing different variants to remain separate.
+- **Recommendation:** Test same product/same options merging, same product/different options separation, max selections, missing required options, and quantity/remove controls in a real browser before treating the feature as verified.
+
+### GF-S5-014 — Local cart schema compatibility is source-only
+- **Severity:** Medium
+- **Evidence:** VERIFIED BY SOURCE; runtime NOT TESTABLE
+- **Finding:** Existing local cart rows without option IDs/line keys are normalized when read. Actual IndexedDB upgrade and recovery behavior has not been exercised.
+- **Recommendation:** Add browser-level IndexedDB migration tests and test interrupted writes/storage quota failures.
+
+### Goldfish interaction-testing boundary
+
+The product details dialog, keyboard selection, cart variant controls and IndexedDB persistence have not been exercised in a browser. These remain NOT TESTABLE in this environment. A passing Vite build proves bundling only.
