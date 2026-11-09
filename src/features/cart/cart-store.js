@@ -2,6 +2,7 @@ const DB_NAME = 'quickbite-local';
 const DB_VERSION = 1;
 const STORE_NAME = 'cart';
 const CART_KEY = 'active-cart';
+const OWNER_KEY = 'active-cart-owner';
 
 function openDatabase() {
   return new Promise((resolve, reject) => {
@@ -69,6 +70,28 @@ export class CartStore {
       tx.onerror = () => reject(tx.error || new Error('Could not save cart.'));
       tx.onabort = () => reject(tx.error || new Error('Cart save was cancelled.'));
     });
+  }
+
+  setOwner(ownerUid) {
+    const nextOwner = ownerUid || null;
+    return this.runMutation(() => new Promise((resolve, reject) => {
+      const tx = this.db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      const request = store.get(OWNER_KEY);
+      let cleared = false;
+      request.onsuccess = () => {
+        const previousOwner = request.result || null;
+        if (previousOwner !== nextOwner) {
+          store.put([], CART_KEY);
+          cleared = true;
+        }
+        store.put(nextOwner, OWNER_KEY);
+      };
+      request.onerror = () => reject(request.error || new Error('Could not check cart ownership.'));
+      tx.oncomplete = () => resolve({ cleared });
+      tx.onerror = () => reject(tx.error || new Error('Could not update cart ownership.'));
+      tx.onabort = () => reject(tx.error || new Error('Cart ownership update was cancelled.'));
+    }));
   }
 
   add(product) {
