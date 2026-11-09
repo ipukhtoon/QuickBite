@@ -32,7 +32,11 @@ Restaurant identity, currency, tax, delivery zones/fees, operating hours, suppor
 The current HTML remains a static demonstration. Real cart, checkout, order creation, authentication, customer accounts, admin/staff operations, persistence, security and responsive production layout remain unimplemented.
 
 ## Stage 5 current scope
+- Stage 5 implementation record: docs/workflow/STAGE_5_IMPLEMENTATION.md
+- Goldfish Stage 5 report: docs/QA/GOLDFISH_STAGE_5.md
 - User approved Stage 4 and explicitly authorized Stage 5 on 2026-11-10.
+- Phase 1 repository foundation is recorded in docs/workflow/STAGE_5_IMPLEMENTATION.md.
+- Independent initial QA findings are recorded in docs/QA/GOLDFISH_STAGE_5.md.
 - Begin with repository foundation and responsive UI migration while preserving the design authority.
 - No production Firebase provisioning, live data migration, payment gateway activation or deployment is authorized.
 - Unknown restaurant-specific values must remain configurable and must not be fabricated.
