@@ -272,3 +272,47 @@ The security baseline follows a sensible default-deny/trusted-write direction, b
 ### Goldfish verdict
 
 The live catalogue integration is a meaningful step beyond the sample-only menu, and the Emulator security suite now passes. The application is still **not a production food-ordering system**: no Firebase project is connected, no account UI or trusted order functions exist, and cart snapshots are not authoritative. Keep checkout disabled. Goldfish did not modify source files, Firebase records or production data.
+
+
+## Follow-up inspection — customer authentication interface
+
+### GF-S5-029 — Account UI preserves guest browsing when Firebase is not configured
+- **Severity:** Low (positive control)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Profile navigation opens an account dialog. Without complete Firebase configuration, sign-in and registration controls are disabled and the user is told guest browsing remains available.
+- **Recommendation:** Keep guest browsing independent of account availability. Test the configured and unconfigured states in a real browser.
+
+### GF-S5-030 — Firebase Auth account is not yet a Firestore customer profile
+- **Severity:** High before profile, saved-items or order-history features rely on it
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Registration creates a Firebase Authentication user and updates the Auth display name. It does not create a `customers/{uid}` Firestore document; direct client writes to customer documents are denied by rules.
+- **Recommendation:** Add trusted customer-profile provisioning and controlled profile update operations. Do not loosen customer Firestore rules to permit arbitrary client writes.
+
+### GF-S5-031 — Sign-in, registration and recovery feedback is present in source
+- **Severity:** Medium (runtime verification outstanding)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** The account dialog includes labelled email/password fields, registration name, minimum password length, sign-in, sign-out, password reset, pending feedback and mapped common Auth errors.
+- **Recommendation:** Test duplicate email, invalid credentials, weak password, disabled account, throttling, offline/network failure, password-reset delivery and sign-out state with the Firebase Auth Emulator or a dedicated test project.
+
+### GF-S5-032 — Authentication has not been exercised against Firebase or in a browser
+- **Severity:** High before production release
+- **Evidence:** NOT TESTABLE
+- **Finding:** No Firebase project configuration is present and no browser/device interaction environment was available. Source inspection and Vite CI cannot prove real account creation, sign-in persistence or password reset delivery.
+- **Recommendation:** Add Auth Emulator integration tests and real browser tests using synthetic test accounts before marking QB-REQ-009 complete.
+
+### Updated persona simulation
+
+| Persona | Current evidence-based result |
+|---|---|
+| First-time visitor | Can browse demo menu; live catalogue requires configured Firebase |
+| Guest customer | Guest browsing and local cart preview remain available; guest checkout outstanding |
+| Registered customer | Sign-in/register/reset UI and Auth service calls are implemented; Firebase connection and runtime tests outstanding |
+| Returning customer | Auth state observer and local cart persistence exist in source; session persistence not interaction-tested |
+| Restaurant administrator | Admin interface and role-specific operations outstanding |
+| Restaurant staff | Staff interface and order queue outstanding |
+| Beginner | Account forms have labels, hints and feedback in source; usability not interaction-tested |
+| Android user | Responsive layout source exists; actual device, keyboard and safe-area testing NOT TESTABLE |
+
+### Goldfish verdict
+
+The customer account interface now has a real Firebase Auth integration path and preserves guest access. It is not yet a verified account journey: Firebase is not connected, no Auth Emulator tests exist, and a Firestore customer profile is not provisioned. Do not mark customer accounts complete or rely on Firestore customer records until those gaps are addressed. Goldfish did not modify implementation files or Firebase data.
