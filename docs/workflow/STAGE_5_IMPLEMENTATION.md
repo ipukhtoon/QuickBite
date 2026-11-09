@@ -157,6 +157,27 @@
 - Authentication UI, catalogue-to-Firestore integration, Cloud Functions, order creation and guest order retrieval remain outstanding.
 - Public `settings/public` must contain public-safe fields only because Firestore rules cannot redact fields inside a readable document.
 
+## Phase 5 — Automated Firestore security rules tests
+
+**Status: TEST SUITE AND CI STEP ADDED; EXECUTION RESULT PENDING**
+
+### Changes
+- Added `@firebase/rules-unit-testing` and Firebase CLI development dependencies.
+- Added automated Firestore Emulator tests for public settings/catalogue access, inactive product denial, catalogue write denial, customer ownership, order ownership/query restrictions, guest direct-order denial, active/inactive staff access and saved-item ownership.
+- Added `npm run test:security`.
+- Updated GitHub Actions to execute the Firestore rules tests after the Vite build.
+
+### Files
+- `package.json`
+- `tests/security/firestore.rules.test.js`
+- `.github/workflows/build.yml`
+
+### Verification and limitations
+- GitHub Actions runs have started for the new security test workflow; the final result must be inspected before recording a pass.
+- Tests are written against the Firebase Emulator Suite and synthetic test records only.
+- No production Firebase project, production data or deployed rules are involved.
+- Storage rules are not yet covered by automated emulator tests.
+
 ## Remaining implementation phases
 
 1. Extract and formalize the design system; modularize the customer UI while matching the reference.
