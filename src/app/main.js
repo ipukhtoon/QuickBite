@@ -4,7 +4,7 @@ import { initProductDetails } from '../features/product/product-details.js';
 
 async function bootstrap() {
   const cart = await initCart();
-  initCatalogue({ onAdd: (product) => cart.add(product) });
+  initCatalogue();
   initProductDetails({ onAdd: (product) => cart.add(product) });
 }
 
