@@ -39,6 +39,17 @@ service cloud.firestore {
       allow create, update, delete: if false;
     }
 
+    match /optionGroups/{groupId} {
+      allow get, list: if resource.data.active == true;
+      allow create, update, delete: if false;
+
+      match /options/{optionId} {
+        allow get, list: if resource.data.active == true
+          && get(/databases/$(database)/documents/optionGroups/$(groupId)).data.active == true;
+        allow create, update, delete: if false;
+      }
+    }
+
     // Customer profile data is private; privileged writes are reserved for trusted functions.
     match /customers/{uid} {
       allow get: if owns(uid) || admin();
