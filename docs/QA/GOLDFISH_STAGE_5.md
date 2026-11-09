@@ -214,4 +214,4 @@ The security baseline follows a sensible default-deny/trusted-write direction, b
 - **Evidence:** VERIFIED BY SOURCE
 - **Finding:** Emulator-based tests now cover public catalogue access, inactive catalogue denial, client write denial, customer/order ownership, guest direct-order denial, active/inactive staff order reads and saved-item ownership. CI invokes the suite after the production build.
 - **Recommendation:** Review the actual CI test output, fix any failing rule/test behavior, and add Storage rules tests. Do not deploy rules based only on the presence of test files.
-- **Status:** NOT YET VERIFIED until the new GitHub Actions run completes successfully.
+- **Status:** NOT YET VERIFIED. Initial CI runs failed at dependency installation because the selected rules test library had an incompatible Firebase peer dependency. Developer updated it to a Firebase-12-compatible release; the retest is pending.
