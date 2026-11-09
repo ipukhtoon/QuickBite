@@ -299,6 +299,7 @@ The live catalogue integration is a meaningful step beyond the sample-only menu,
 - **Evidence:** NOT TESTABLE
 - **Finding:** No Firebase project configuration is present and no browser/device interaction environment was available. Source inspection and Vite CI cannot prove real account creation, sign-in persistence or password reset delivery.
 - **Recommendation:** Add Auth Emulator integration tests and real browser tests using synthetic test accounts before marking QB-REQ-009 complete.
+- **CI evidence:** GitHub Actions run #123 passed dependency installation, Vite build and all 11 Firestore/Storage Emulator tests. This verifies compilation and existing data rules only; it does not test Firebase Auth or account form interactions.
 
 ### Updated persona simulation
 
