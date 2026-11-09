@@ -79,7 +79,8 @@ test('customer profile callable requires an authenticated Firebase user', async 
 
 test('authenticated user gets a trusted customer profile and repeat calls preserve existing fields', async () => {
   const response = await callEnsureProfile(idToken);
-  assert.equal(response.ok, true, 'Callable should succeed for a valid Auth Emulator token.');
+  const responseBody = await response.json();
+  assert.equal(response.ok, true, `Callable should succeed for a valid Auth Emulator token; status=${response.status}, body=${JSON.stringify(responseBody)}`);
   const profileRef = db.collection('customers').doc(uid);
   const first = await profileRef.get();
   assert.equal(first.exists, true);
