@@ -26,7 +26,7 @@ after(async () => {
 test('public users can read published menu media', async () => {
   const storage = testEnv.unauthenticatedContext().storage();
   const bytes = await assertSucceeds(getBytes(ref(storage, menuPath)));
-  assert.deepEqual([...bytes], [81, 66]);
+  assert.deepEqual([...new Uint8Array(bytes)], [81, 66]);
 });
 
 test('public users cannot upload menu media', async () => {
