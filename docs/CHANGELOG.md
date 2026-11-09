@@ -51,3 +51,8 @@ Project planning, implementation and QA milestones.
 - Kept cart separate from Orders; checkout remains disabled pending real restaurant configuration and trusted backend.
 - Added GitHub Actions build workflow. Initial build failure from top-level await was corrected; subsequent run is pending.
 - Goldfish follow-up findings saved in `docs/QA/GOLDFISH_STAGE_5.md`.
+
+### Build verification result
+- GitHub Actions run #12 passed dependency installation and `npm run build` for implementation commit `4ef2a3060c026121d519b4aa8173b0575315d944`.
+- A top-level-await compatibility failure was corrected before the passing run.
+- No browser/device interaction testing is claimed.
