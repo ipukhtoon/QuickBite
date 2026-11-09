@@ -1,6 +1,6 @@
 import { DEMO_PRODUCT_OPTIONS } from '../catalogue/demo-options.js';
 
-const formatDemoAmount = (minor) => (minor / 100).toFixed(2) + ' demo units';
+const formatAmount = (minor, currencyCode) => currencyCode ? new Intl.NumberFormat(undefined, { style: 'currency', currency: currencyCode }).format(minor / 100) : (minor / 100).toFixed(2) + ' demo units';
 
 export function initProductDetails({ onAdd }) {
   const dialog = document.getElementById('productDialog');
@@ -35,7 +35,7 @@ export function initProductDetails({ onAdd }) {
     return issues.length === 0;
   }
 
-  function updatePrice() { priceElement.textContent = formatDemoAmount(selectedAmount()); validate(); }
+  function updatePrice() { priceElement.textContent = formatAmount(selectedAmount(), currentProduct?.currencyCode); validate(); }
 
   function open(card) {
     const price = Number(card.dataset.price);
