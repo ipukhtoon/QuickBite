@@ -26,7 +26,7 @@
 ## Verification status
 - GitHub Actions run #94 passed `npm install`, `npm run build` and all 11 Emulator security tests (8 Firestore, 3 Storage).
 - GitHub Actions run #102 passed dependency installation, the Vite production build and all Firestore/Storage Emulator tests for the catalogue/cart source revision.
-- GitHub Actions run #123 is pending for the authentication UI and lazy Firebase SDK loading changes.
+- GitHub Actions run #123 passed dependency installation, the Vite production build and all 11 Firestore/Storage Emulator tests for the authentication UI and lazy Firebase SDK loading changes.
 - Source inspection has been performed on the current modules.
 - No browser interaction, visual screenshot or Android device test is claimed.
 - No Firebase project has been provisioned or connected; live catalogue integration has not been tested against real Firebase data.
