@@ -154,6 +154,48 @@
         <div class="cart-dialog-footer"><button class="secondary-button" type="button" data-close-cart>Continue browsing</button><button class="primary-button" type="button" disabled title="Checkout will be enabled after restaurant data and backend setup">Checkout unavailable</button></div>
     </dialog>
 
+    <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
+        <div class="account-dialog-header">
+            <div><p class="eyebrow">YOUR QUICKBITE ACCOUNT</p><h2 id="accountTitle">Your account</h2></div>
+            <button class="icon-button" type="button" data-close-account aria-label="Close account"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <div id="accountUnavailable" class="account-unavailable" hidden>
+            <p>Guest browsing is available. Sign-in, registration and password recovery will activate after this restaurant connects its Firebase account service.</p>
+        </div>
+        <div id="accountGuestPanel">
+            <div class="auth-tabs" role="group" aria-label="Account options">
+                <button type="button" data-auth-view="signin" aria-pressed="true">Sign in</button>
+                <button type="button" data-auth-view="register" aria-pressed="false">Create account</button>
+            </div>
+            <form id="signInForm" class="auth-form">
+                <label for="signInEmail">Email address</label>
+                <input id="signInEmail" name="email" type="email" autocomplete="email" required>
+                <label for="signInPassword">Password</label>
+                <input id="signInPassword" name="password" type="password" autocomplete="current-password" required>
+                <button class="primary-button" type="submit">Sign in</button>
+                <button class="text-button" type="button" id="resetPasswordButton">Forgot password?</button>
+            </form>
+            <form id="registerForm" class="auth-form" hidden>
+                <label for="registerName">Your name</label>
+                <input id="registerName" name="displayName" type="text" autocomplete="name" maxlength="80" required>
+                <label for="registerEmail">Email address</label>
+                <input id="registerEmail" name="email" type="email" autocomplete="email" required>
+                <label for="registerPassword">Create password</label>
+                <input id="registerPassword" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+                <small class="auth-hint">Use at least 8 characters.</small>
+                <button class="primary-button" type="submit">Create account</button>
+            </form>
+        </div>
+        <div id="accountSignedInPanel" class="account-signed-in" hidden>
+            <p class="eyebrow">SIGNED IN</p>
+            <strong id="accountDisplayName"></strong>
+            <span id="accountEmail"></span>
+            <button class="secondary-button" type="button" id="signOutButton">Sign out</button>
+        </div>
+        <p id="accountMessage" class="account-message" role="status" aria-live="polite" hidden></p>
+        <div class="account-dialog-footer"><button class="secondary-button" type="button" data-close-account>Continue as guest</button></div>
+    </dialog>
+
     <!-- JavaScript Interactivity -->
     <script type="module" src="/src/app/main.js"></script>
 </body>
