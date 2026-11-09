@@ -218,7 +218,7 @@
 
 ## Phase 7 — Customer authentication interface
 
-**Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS RUN #123 PENDING**
+**Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS RUN #123 PASSED**
 
 ### Changes
 - Added an account dialog reachable from the Profile navigation item.
@@ -242,7 +242,7 @@
 ### Verification and limitations
 - Source inspection confirms Profile navigation opens the account dialog and the UI calls the existing Firebase Auth registration/sign-in/sign-out/password-reset functions.
 - Firebase configuration is not present, so live authentication has not been exercised.
-- GitHub Actions run #123 is pending for the authentication UI and lazy-loading source revision.
+- GitHub Actions run #123 passed dependency installation, `npm run build` and all 11 Firestore/Storage Emulator tests for the authentication UI and lazy-loading source revision.
 - No browser interaction, visual screenshot, Firebase Auth Emulator test or Android device test is claimed.
 - Registration currently creates a Firebase Authentication user and updates the Auth display name. It does not yet create a Firestore `customers/{uid}` profile document; trusted customer-profile provisioning/update remains outstanding.
 - Email/password provider enablement and password-reset email delivery settings must be configured in the selected Firebase project before use.
