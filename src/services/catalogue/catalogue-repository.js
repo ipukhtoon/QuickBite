@@ -23,6 +23,11 @@ export async function fetchPublicSettings() {
   if (typeof settings.currencyCode !== 'string' || !/^[A-Z]{3}$/.test(settings.currencyCode)) {
     throw new Error('The restaurant currency has not been configured correctly.');
   }
+  try {
+    new Intl.NumberFormat(undefined, { style: 'currency', currency: settings.currencyCode });
+  } catch {
+    throw new Error('The restaurant currency code is not supported.');
+  }
   return settings;
 }
 
@@ -36,9 +41,7 @@ export async function fetchActiveCategories() {
   return result.docs.map((snapshot) => ({ id: snapshot.id, ...snapshot.data() }));
 }
 
-async function fetchOptionGroups(db, groupIds = []) {
-  const uniqueIds = [...new Set(groupIds)].filter((id) => typeof id === 'string' && id.length > 0);
-  return Promise.all(uniqueIds.map(async (groupId) => {
+async function loadOptionGroup(db, groupId) {
     const groupSnapshot = await getDoc(doc(db, 'optionGroups', groupId));
     if (!groupSnapshot.exists()) return null;
     const group = groupSnapshot.data();
@@ -50,13 +53,15 @@ async function fetchOptionGroups(db, groupIds = []) {
       orderBy('sortOrder', 'asc'),
     ));
     const choices = optionsSnapshot.docs.map((optionSnapshot) => {
-        const option = optionSnapshot.data();
-        return {
-          id: optionSnapshot.id,
-          label: option.name,
-          deltaMinor: Number.isInteger(option.priceDeltaMinor) ? option.priceDeltaMinor : 0,
-        };
-      });
+      const option = optionSnapshot.data();
+      return {
+        id: optionSnapshot.id,
+        label: option.name,
+        deltaMinor: option.priceDeltaMinor,
+        valid: typeof option.name === 'string' && option.name.length > 0 && Number.isInteger(option.priceDeltaMinor),
+      };
+    });
+    if (choices.some((choice) => !choice.valid)) return { valid: false };
     const required = group.required === true;
     const min = Number.isInteger(group.minSelections) ? group.minSelections : (required ? 1 : 0);
     const max = Number.isInteger(group.maxSelections) ? group.maxSelections : (group.selectionType === 'single' ? 1 : choices.length);
@@ -73,13 +78,21 @@ async function fetchOptionGroups(db, groupIds = []) {
         required,
         min,
         max,
-        choices,
+        choices: choices.map(({ valid, ...choice }) => choice),
       },
     };
-  })).then((results) => ({
+}
+
+async function fetchOptionGroups(db, groupIds = [], cache = new Map()) {
+  const uniqueIds = [...new Set(groupIds)].filter((id) => typeof id === 'string' && id.length > 0);
+  const results = await Promise.all(uniqueIds.map((groupId) => {
+    if (!cache.has(groupId)) cache.set(groupId, loadOptionGroup(db, groupId));
+    return cache.get(groupId);
+  }));
+  return {
     valid: results.every((result) => result && result.valid),
     groups: results.filter((result) => result && result.valid).map((result) => result.group),
-  }));
+  };
 }
 
 export async function fetchActiveProducts({ categoryId } = {}) {
@@ -88,9 +101,10 @@ export async function fetchActiveProducts({ categoryId } = {}) {
   if (categoryId) constraints.push(where('categoryId', '==', categoryId));
   constraints.push(orderBy('sortOrder', 'asc'));
   const result = await getDocs(query(collection(db, 'products'), ...constraints));
+  const optionGroupCache = new Map();
   return Promise.all(result.docs.map(async (snapshot) => {
     const product = snapshot.data();
-    const optionResult = await fetchOptionGroups(db, product.optionGroupIds || []);
+    const optionResult = await fetchOptionGroups(db, product.optionGroupIds || [], optionGroupCache);
     const validPrice = Number.isInteger(product.priceMinor) && product.priceMinor >= 0;
     return {
       id: snapshot.id,
@@ -99,7 +113,7 @@ export async function fetchActiveProducts({ categoryId } = {}) {
       categoryId: product.categoryId,
       imageUrl: product.imageUrl || '',
       priceMinor: product.priceMinor,
-      available: product.available !== false && validPrice && optionResult.valid,
+      available: product.available !== false && validPrice && optionResult.valid && typeof product.name === 'string' && product.name.length > 0,
       optionGroups: optionResult.groups,
     };
   }));
