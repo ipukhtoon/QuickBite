@@ -98,3 +98,12 @@ Project planning, implementation and QA milestones.
 - GitHub Actions run #102 passed dependency installation, the production build and all 11 Firestore/Storage Emulator tests for the latest source revision.
 - No real Firebase project is connected; no browser or Android interaction testing is claimed.
 - Checkout remains disabled. Trusted order creation, server-side price validation, authentication UI, staff/admin operations and production deployment remain outstanding.
+
+
+### Stage 5 Phase 7 — customer authentication interface
+- Added customer account dialog for sign-in, registration, sign-out and password-reset requests.
+- Connected Profile navigation to the account dialog and preserved guest browsing when Firebase is not configured.
+- Added accessible form labels, autocomplete hints, minimum password length, pending feedback and common Firebase Auth error messages.
+- Split Firebase configuration from SDK initialization and lazy-loaded Firebase services when configured.
+- Source inspection completed; GitHub Actions run #123 pending. No real Firebase Auth or browser interaction test is claimed.
+- Firestore customer-profile provisioning remains outstanding.
