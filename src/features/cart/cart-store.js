@@ -26,7 +26,14 @@ export class CartStore {
   async read() {
     return new Promise((resolve, reject) => {
       const request = this.db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get(CART_KEY);
-      request.onsuccess = () => resolve(Array.isArray(request.result) ? request.result : []);
+      request.onsuccess = () => {
+        const saved = Array.isArray(request.result) ? request.result : [];
+        const normalized = saved.map((line) => {
+          const optionIds = Array.isArray(line.optionIds) ? line.optionIds : [];
+          return { ...line, optionIds, options: Array.isArray(line.options) ? line.options : [], optionSummary: line.optionSummary || '', lineKey: line.lineKey || makeLineKey(line.productId, optionIds) };
+        });
+        resolve(normalized);
+      };
       request.onerror = () => reject(request.error || new Error('Could not read cart.'));
     });
   }
