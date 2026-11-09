@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Publicly served menu media is read-only from the client.
+    match /menu/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // No direct client uploads are enabled in this initial security baseline.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
