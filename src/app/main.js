@@ -29,9 +29,11 @@ document.querySelectorAll('[data-nav]').forEach((item) => {
       window.dispatchEvent(new CustomEvent('quickbite:notice', { detail: 'Order history will appear here after customer accounts and order processing are implemented. Your cart is available from the Cart button above.' }));
       return;
     }
-    const message = destination === 'saved'
-      ? 'Saved items will be available when customer accounts are implemented.'
-      : 'Your profile will be available when secure sign-in is implemented.';
+    if (destination === 'profile') {
+      window.dispatchEvent(new CustomEvent('quickbite:open-account'));
+      return;
+    }
+    const message = 'Saved items will be available when customer accounts are implemented.';
     window.dispatchEvent(new CustomEvent('quickbite:notice', { detail: message }));
   });
 });
