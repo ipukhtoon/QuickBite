@@ -34,3 +34,8 @@ test('profile model bounds the display name', () => {
   });
   assert.equal(result.displayName.length, 80);
 });
+
+test('trusted profile provisioning callable exports successfully', async () => {
+  const functions = await import('../src/index.js');
+  assert.ok(functions.ensureCustomerProfile);
+});
