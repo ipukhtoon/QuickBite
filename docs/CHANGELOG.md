@@ -75,3 +75,8 @@ Project planning, implementation and QA milestones.
 - Added Firestore data-model and trust-boundary documentation.
 - GitHub Actions run #53 passed the Vite production build. Firebase Emulator security tests have not yet been run.
 - No Firebase project provisioning, rules deployment or production data access occurred.
+
+### Stage 5 Phase 5 — Firestore rules test suite
+- Added Emulator-based Firestore security tests for customer/order ownership, guest denial, active/inactive staff, public catalogue and saved-item boundaries.
+- Added `test:security` and wired the suite into GitHub Actions.
+- CI result pending; Storage rules tests remain outstanding.
