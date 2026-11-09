@@ -43,10 +43,10 @@ export async function initCart() {
       const options = document.createElement('span'); options.className = 'cart-line-options'; options.textContent = line.optionSummary || ''; options.hidden = !line.optionSummary;
       const price = document.createElement('span'); price.className = 'cart-line-price'; price.textContent = money(line.priceMinor * line.quantity);
       const controls = document.createElement('div'); controls.className = 'quantity-controls';
-      controls.append(makeButton('Decrease quantity', '−', 'decrease', line.productId));
+      controls.append(makeButton('Decrease quantity', '−', 'decrease', line.lineKey));
       const quantity = document.createElement('span'); quantity.textContent = String(line.quantity); quantity.setAttribute('aria-live', 'polite');
-      controls.append(quantity, makeButton('Increase quantity', '+', 'increase', line.productId));
-      const remove = makeButton('Remove item', 'Remove', 'remove', line.productId); remove.classList.add('remove-line');
+      controls.append(quantity, makeButton('Increase quantity', '+', 'increase', line.lineKey));
+      const remove = makeButton('Remove item', 'Remove', 'remove', line.lineKey); remove.classList.add('remove-line');
       details.append(title, description, options, price, controls, remove); row.append(image, details); linesElement.append(row);
     });
     subtotalElement.textContent = money(subtotal);
