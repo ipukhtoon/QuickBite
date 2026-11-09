@@ -215,3 +215,60 @@ The security baseline follows a sensible default-deny/trusted-write direction, b
 - **Finding:** Emulator-based tests now cover public catalogue access, inactive catalogue denial, client write denial, customer/order ownership, guest direct-order denial, active/inactive staff order reads and saved-item ownership. CI invokes the suite after the production build.
 - **Recommendation:** Review the actual CI test output, fix any failing rule/test behavior, and add Storage rules tests. Do not deploy rules based only on the presence of test files.
 - **Status:** NOT YET VERIFIED. Initial CI runs failed at dependency installation because the selected rules test library had an incompatible Firebase peer dependency. Developer updated it to a Firebase-12-compatible release; the retest is pending.
+
+
+## Follow-up inspection — live catalogue and currency-aware cart
+
+### GF-S5-023 — Live catalogue is gated by complete Firebase configuration and public settings
+- **Severity:** Medium
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** The app uses the sample catalogue only when Firebase is not configured. When configured, it loads public settings, active categories and products; missing/invalid public settings cause a visible load failure rather than silently presenting sample products.
+- **Recommendation:** Keep `settings/public` limited to information safe for every visitor. Validate a dedicated non-production Firebase project before production setup.
+
+### GF-S5-024 — Product option groups are checked before a product can be added
+- **Severity:** Medium (positive control)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Live option groups and choices are loaded from Firestore. Inactive/missing groups, malformed selection types, invalid min/max values and malformed option data mark the affected product unavailable.
+- **Recommendation:** Trusted checkout functions must repeat every validation and recalculate totals; browser validation is not a security boundary.
+
+### GF-S5-025 — Local cart prices can become stale
+- **Severity:** High if checkout is enabled; currently mitigated because checkout is disabled
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Cart rows persist price/currency snapshots. Re-adding the same product/variant refreshes its display snapshot, but an old cart line is not automatically re-priced on every cart open.
+- **Recommendation:** Before enabling checkout, fetch/revalidate all current products, options, availability and currency through a trusted server operation. Show price changes and require customer acknowledgement where appropriate.
+
+### GF-S5-026 — Currency consistency and rapid cart updates
+- **Severity:** Medium (positive control; runtime not yet verified)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Catalogue, product options and cart display use configured currency codes. Mixed-currency saved lines do not produce a misleading single-currency subtotal. Cart writes are serialized and quantity adjustments are computed inside the mutation queue.
+- **Recommendation:** Add IndexedDB/browser tests for concurrent rapid taps, legacy cart normalization, currency changes and storage failures.
+
+### GF-S5-027 — Emulator test assertion defect was corrected
+- **Severity:** Resolved test defect
+- **Evidence:** VERIFIED BY INTERACTION (GitHub Actions Emulator execution)
+- **Finding:** The first combined run executed all Firestore tests successfully and two Storage tests successfully, but one Storage read assertion failed because `getBytes()` returns an `ArrayBuffer`, not an iterable. The test was corrected to inspect a `Uint8Array`.
+- **Retest:** GitHub Actions run #94 passed the Vite build and all 11 Firestore/Storage security tests (8 Firestore, 3 Storage).
+- **Status:** Corrected and CI-verified for the security rules/test revision.
+
+### GF-S5-028 — Real Firebase data and user interactions remain untested
+- **Severity:** High before production release
+- **Evidence:** NOT TESTABLE
+- **Finding:** No Firebase project credentials are configured in this repository environment. The live repository path is source-reviewed but has not been exercised against real Firestore data. No browser or Android device session was available.
+- **Recommendation:** Use a dedicated non-production Firebase project and safe test records, then test catalogue loading, option selection, cart persistence, currency display, network errors and Android viewport/keyboard behavior before enabling real ordering.
+
+### Updated persona simulation
+
+| Persona | Current evidence-based result |
+|---|---|
+| First-time visitor | Demo menu without Firebase configuration; live menu path is implemented but requires configured Firebase data |
+| Guest customer | Can browse and maintain a local cart preview; guest checkout is not implemented |
+| Registered customer | Authentication service functions exist; account screens and complete account journeys are outstanding |
+| Returning customer | IndexedDB cart persistence is implemented in source; reload behavior is not browser-tested |
+| Restaurant administrator | Admin interface and management operations outstanding |
+| Restaurant staff | Staff interface and order queue outstanding |
+| Beginner | Loading/error/empty states and preview limitations are expressed in source; usability not interaction-tested |
+| Android user | Responsive CSS exists; real Android viewport, keyboard and safe-area tests remain NOT TESTABLE |
+
+### Goldfish verdict
+
+The live catalogue integration is a meaningful step beyond the sample-only menu, and the Emulator security suite now passes. The application is still **not a production food-ordering system**: no Firebase project is connected, no account UI or trusted order functions exist, and cart snapshots are not authoritative. Keep checkout disabled. Goldfish did not modify source files, Firebase records or production data.
