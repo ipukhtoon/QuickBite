@@ -65,7 +65,9 @@ async function loadOptionGroup(db, groupId) {
     const required = group.required === true;
     const min = Number.isInteger(group.minSelections) ? group.minSelections : (required ? 1 : 0);
     const max = Number.isInteger(group.maxSelections) ? group.maxSelections : (group.selectionType === 'single' ? 1 : choices.length);
-    if (min < 0 || max < min || max > choices.length || (group.selectionType === 'single' && max > 1)) {
+    if (typeof group.name !== 'string' || group.name.length === 0
+      || min < 0 || (required && min < 1) || max < min || max > choices.length
+      || (group.selectionType === 'single' && max > 1)) {
       return { valid: false };
     }
     if (choices.length === 0 && min > 0) return { valid: false };
@@ -104,7 +106,10 @@ export async function fetchActiveProducts({ categoryId } = {}) {
   const optionGroupCache = new Map();
   return Promise.all(result.docs.map(async (snapshot) => {
     const product = snapshot.data();
-    const optionResult = await fetchOptionGroups(db, product.optionGroupIds || [], optionGroupCache);
+    const optionGroupIdsValid = product.optionGroupIds == null || Array.isArray(product.optionGroupIds);
+    const optionResult = optionGroupIdsValid
+      ? await fetchOptionGroups(db, product.optionGroupIds || [], optionGroupCache)
+      : { valid: false, groups: [] };
     const validPrice = Number.isInteger(product.priceMinor) && product.priceMinor >= 0;
     return {
       id: snapshot.id,
