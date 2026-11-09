@@ -28,9 +28,6 @@ export function initCatalogue({ onAdd }) {
   }
 
   chips.forEach((chip) => {
-    chip.setAttribute('role', 'button');
-    chip.setAttribute('tabindex', '0');
-    chip.setAttribute('aria-pressed', String(chip.classList.contains('active')));
     const select = () => {
       activeCategory = chip.dataset.category || 'all';
       chips.forEach((item) => {
@@ -41,9 +38,6 @@ export function initCatalogue({ onAdd }) {
       applyFilters();
     };
     chip.addEventListener('click', select);
-    chip.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); select(); }
-    });
   });
 
   search?.addEventListener('input', (event) => {
