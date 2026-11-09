@@ -7,7 +7,7 @@ async function bootstrap() {
   const cart = await initCart();
   initCatalogue();
   initProductDetails({ onAdd: (product) => cart.add(product) });
-  initAuthUI();
+  initAuthUI({ setCartOwner: cart.setOwner });
 }
 
 bootstrap().catch((error) => {
