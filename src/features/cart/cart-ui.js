@@ -34,6 +34,7 @@ export async function initCart() {
           notice.hidden = false;
         }
       },
+      setOwner: async () => ({ cleared: false }),
     };
   }
 
@@ -134,6 +135,11 @@ export async function initCart() {
     add: async (product) => {
       await store.add(product);
       await render();
+    },
+    setOwner: async (ownerUid) => {
+      const result = await store.setOwner(ownerUid);
+      await render();
+      return result;
     },
   };
 }
