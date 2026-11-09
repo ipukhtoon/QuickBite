@@ -156,3 +156,9 @@ Goldfish did not modify source files, Firebase, production data or repository im
 ### Goldfish interaction-testing boundary
 
 The product details dialog, keyboard selection, cart variant controls and IndexedDB persistence have not been exercised in a browser. These remain NOT TESTABLE in this environment. A passing Vite build proves bundling only.
+
+### GF-S5-015 — Product options implementation build
+- **Severity:** Resolved build verification item
+- **Evidence:** VERIFIED BY SOURCE (GitHub Actions run #35)
+- **Finding:** The Vite production build passed after the product customization and option-aware cart modules were added.
+- **Limit:** No browser-level tests were run. Build success does not prove dialog behavior, form validation, IndexedDB persistence or responsive layout.
