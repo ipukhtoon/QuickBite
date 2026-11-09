@@ -13,7 +13,7 @@ document.querySelectorAll('[data-nav]').forEach((item) => {
     if (destination === 'home') return;
     event.preventDefault();
     if (destination === 'orders') {
-      document.dispatchEvent(new CustomEvent('quickbite:open-cart'));
+      window.dispatchEvent(new CustomEvent('quickbite:notice', { detail: 'Order history will appear here after customer accounts and order processing are implemented. Your cart is available from the Cart button above.' }));
       return;
     }
     const message = destination === 'saved'
