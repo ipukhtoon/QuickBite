@@ -5,7 +5,10 @@ const CART_KEY = 'active-cart';
 
 function openDatabase() {
   return new Promise((resolve, reject) => {
-    if (!('indexedDB' in window)) { reject(new Error('IndexedDB is not available in this browser.')); return; }
+    if (!('indexedDB' in window)) {
+      reject(new Error('IndexedDB is not available in this browser.'));
+      return;
+    }
     const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = () => {
       const db = request.result;
@@ -23,6 +26,7 @@ function makeLineKey(productId, optionIds = []) {
 export class CartStore {
   constructor(db) { this.db = db; }
   static async create() { return new CartStore(await openDatabase()); }
+
   async read() {
     return new Promise((resolve, reject) => {
       const request = this.db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get(CART_KEY);
@@ -30,13 +34,21 @@ export class CartStore {
         const saved = Array.isArray(request.result) ? request.result : [];
         const normalized = saved.map((line) => {
           const optionIds = Array.isArray(line.optionIds) ? line.optionIds : [];
-          return { ...line, optionIds, options: Array.isArray(line.options) ? line.options : [], optionSummary: line.optionSummary || '', lineKey: line.lineKey || makeLineKey(line.productId, optionIds) };
+          return {
+            ...line,
+            optionIds,
+            options: Array.isArray(line.options) ? line.options : [],
+            optionSummary: line.optionSummary || '',
+            currencyCode: line.currencyCode || null,
+            lineKey: line.lineKey || makeLineKey(line.productId, optionIds),
+          };
         });
         resolve(normalized);
       };
       request.onerror = () => reject(request.error || new Error('Could not read cart.'));
     });
   }
+
   async write(lines) {
     return new Promise((resolve, reject) => {
       const tx = this.db.transaction(STORE_NAME, 'readwrite');
@@ -46,15 +58,39 @@ export class CartStore {
       tx.onabort = () => reject(tx.error || new Error('Cart save was cancelled.'));
     });
   }
+
   async add(product) {
     const lines = await this.read();
     const optionIds = Array.isArray(product.optionIds) ? product.optionIds : [];
     const lineKey = makeLineKey(product.id, optionIds);
     const existing = lines.find((line) => line.lineKey === lineKey);
-    if (existing) existing.quantity = Math.min(99, existing.quantity + 1);
-    else lines.push({ lineKey, productId: product.id, optionIds, options: Array.isArray(product.options) ? product.options : [], optionSummary: product.optionSummary || '', name: product.name, description: product.description, priceMinor: product.priceMinor, image: product.image, quantity: 1 });
+    if (existing) {
+      existing.quantity = Math.min(99, existing.quantity + 1);
+      existing.name = product.name;
+      existing.description = product.description || '';
+      existing.priceMinor = product.priceMinor;
+      existing.currencyCode = product.currencyCode || null;
+      existing.image = product.image || '';
+      existing.options = Array.isArray(product.options) ? product.options : [];
+      existing.optionSummary = product.optionSummary || '';
+    } else {
+      lines.push({
+        lineKey,
+        productId: product.id,
+        optionIds,
+        options: Array.isArray(product.options) ? product.options : [],
+        optionSummary: product.optionSummary || '',
+        name: product.name,
+        description: product.description || '',
+        priceMinor: product.priceMinor,
+        currencyCode: product.currencyCode || null,
+        image: product.image || '',
+        quantity: 1,
+      });
+    }
     return this.write(lines);
   }
+
   async setQuantity(lineKey, quantity) {
     const lines = await this.read();
     const line = lines.find((item) => item.lineKey === lineKey);
@@ -63,6 +99,10 @@ export class CartStore {
     line.quantity = Math.min(99, quantity);
     return this.write(lines);
   }
-  async remove(lineKey) { return this.write((await this.read()).filter((line) => line.lineKey !== lineKey)); }
+
+  async remove(lineKey) {
+    return this.write((await this.read()).filter((line) => line.lineKey !== lineKey));
+  }
+
   async clear() { return this.write([]); }
 }
