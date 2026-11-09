@@ -6,6 +6,7 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
+import { httpsCallable } from 'firebase/functions';
 import { getFirebaseServices } from './client.js';
 
 function authOrThrow() {
@@ -35,4 +36,11 @@ export function sendCustomerPasswordReset(email) {
 
 export function observeAuthState(callback, onError) {
   return onAuthStateChanged(authOrThrow(), callback, onError);
+}
+
+export async function ensureCustomerProfile() {
+  const services = getFirebaseServices();
+  if (!services) throw new Error('Firebase is not configured for this environment.');
+  const ensureProfile = httpsCallable(services.functions, 'ensureCustomerProfile');
+  return ensureProfile({});
 }
