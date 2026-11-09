@@ -55,7 +55,7 @@
 
 ## Phase 2 — Modular customer catalogue and local cart preview
 
-**Status: IMPLEMENTED IN REPOSITORY; CI BUILD VERIFICATION PENDING**
+**Status: IMPLEMENTED IN REPOSITORY; VITE BUILD PASSED IN GITHUB ACTIONS**
 
 ### Changes
 - Extracted design tokens and styles into `src/styles/tokens.css` and `src/styles/main.css`.
@@ -83,7 +83,9 @@
 - GitHub source files were fetched after writing and inspected; module paths, HTML hooks and the preservation of `food_delivery_ui.html` were checked by source inspection.
 - GitHub Actions was configured to install Vite and run `npm run build` on pushes and pull requests.
 - The first build run failed because the browser target does not support top-level await. This was corrected by moving initialization into an async bootstrap function.
-- A subsequent build run is pending; do not mark the build passed until GitHub Actions reports success.
+- GitHub Actions run #12 passed all steps, including `npm run build`, for the implementation commit `4ef2a3060c026121d519b4aa8173b0575315d944`.
+- The earlier top-level-await build failure is therefore corrected for the recorded implementation revision. Later commits after this run were documentation-only at the time of inspection.
+- CI verifies compilation/bundling only; it does not verify runtime behavior or UI interactions.
 - No browser interaction, visual screenshot or Android device test has been performed.
 - Cart contents are local preview data only. The sample catalogue is hardcoded, prices are illustrative demo units, and checkout remains disabled.
 - Authentication, Firebase, trusted order processing, order history, saved items, profile and admin/staff screens remain outstanding.
