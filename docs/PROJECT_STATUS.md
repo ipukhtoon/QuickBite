@@ -8,7 +8,7 @@
 - Stage 2 — Critical Reviewer: COMPLETE
 - Stage 3 — Improvement: COMPLETE
 - Stage 4 — Approval: APPROVED BY USER — 2026-11-10
-- Stage 5 — Implementation: IN PROGRESS (responsive foundation and local cart preview; build verification pending)
+- Stage 5 — Implementation: IN PROGRESS (responsive foundation and local cart preview; Vite CI build passed, interaction testing outstanding)
 
 ## Design authority
 food_delivery_ui.html is the sole visual design authority. Preserve its coral/red, white and light-gray visual language and Plus Jakarta Sans typography.
@@ -39,7 +39,8 @@ A responsive Vite frontend foundation, combined demo catalogue filtering and Ind
 - User approved Stage 4 and explicitly authorized Stage 5 on 2026-11-10.
 - Phase 1 repository foundation and Phase 2 modular catalogue/cart preview are recorded in docs/workflow/STAGE_5_IMPLEMENTATION.md.
 - Independent initial QA findings are recorded in docs/QA/GOLDFISH_STAGE_5.md.
-- Next: obtain a passing CI build, then continue with product detail/options and data-contract preparation while preserving the design authority.
+- GitHub Actions run #12 passed the Vite production build. Browser/device interaction testing remains outstanding.
+- Next: continue with product detail/options and data-contract preparation while preserving the design authority.
 - No production Firebase provisioning, live data migration, payment gateway activation or deployment is authorized.
 - Unknown restaurant-specific values must remain configurable and must not be fabricated.
 - Goldfish must independently inspect implementation evidence and report untested interactions honestly.
