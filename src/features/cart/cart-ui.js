@@ -1,6 +1,6 @@
 import { CartStore } from './cart-store.js';
 
-const money = (minor) => `${(minor / 100).toFixed(2)} demo units`;
+const money = (minor, currencyCode) => currencyCode\n  ? new Intl.NumberFormat(undefined, { style: 'currency', currency: currencyCode }).format(minor / 100)\n  : `${(minor / 100).toFixed(2)} demo units`;
 
 export async function initCart() {
   const dialog = document.getElementById('cartDialog');
@@ -41,7 +41,7 @@ export async function initCart() {
       const title = document.createElement('strong'); title.textContent = line.name;
       const description = document.createElement('span'); description.textContent = line.description;
       const options = document.createElement('span'); options.className = 'cart-line-options'; options.textContent = line.optionSummary || ''; options.hidden = !line.optionSummary;
-      const price = document.createElement('span'); price.className = 'cart-line-price'; price.textContent = money(line.priceMinor * line.quantity);
+      const price = document.createElement('span'); price.className = 'cart-line-price'; price.textContent = money(line.priceMinor * line.quantity, line.currencyCode);
       const controls = document.createElement('div'); controls.className = 'quantity-controls';
       controls.append(makeButton('Decrease quantity', '−', 'decrease', line.lineKey));
       const quantity = document.createElement('span'); quantity.textContent = String(line.quantity); quantity.setAttribute('aria-live', 'polite');
@@ -49,7 +49,7 @@ export async function initCart() {
       const remove = makeButton('Remove item', 'Remove', 'remove', line.lineKey); remove.classList.add('remove-line');
       details.append(title, description, options, price, controls, remove); row.append(image, details); linesElement.append(row);
     });
-    subtotalElement.textContent = money(subtotal);
+    const currencies = [...new Set(lines.map((line) => line.currencyCode || 'demo'))];\n    subtotalElement.textContent = currencies.length === 1\n      ? money(subtotal, currencies[0] === 'demo' ? null : currencies[0])\n      : 'Currency changed — review individual items';
   }
 
   document.querySelectorAll('[data-open-cart]').forEach((button) => button.addEventListener('click', async () => { await render(); dialog.showModal(); }));
