@@ -18,20 +18,21 @@
 - Combined catalogue search and category filtering.
 - IndexedDB local cart preview with product option variants, serialized updates and currency-aware display.
 - Product customization with required/optional option groups.
-- Firebase client and Auth service functions.
+- Firebase client and Auth service functions, plus customer sign-in/register/sign-out/password-reset interface.
 - Firestore repository for public settings, active categories, active products and active product options.
 - Initial Firestore and Storage security rules, indexes and Emulator configuration.
 - Automated Firestore/Storage Emulator tests in GitHub Actions.
 
 ## Verification status
 - GitHub Actions run #94 passed `npm install`, `npm run build` and all 11 Emulator security tests (8 Firestore, 3 Storage).
-- GitHub Actions run #102 passed dependency installation, the Vite production build and all Firestore/Storage Emulator tests for the latest source revision.
+- GitHub Actions run #102 passed dependency installation, the Vite production build and all Firestore/Storage Emulator tests for the catalogue/cart source revision.
+- GitHub Actions run #123 is pending for the authentication UI and lazy Firebase SDK loading changes.
 - Source inspection has been performed on the current modules.
 - No browser interaction, visual screenshot or Android device test is claimed.
 - No Firebase project has been provisioned or connected; live catalogue integration has not been tested against real Firebase data.
 
 ## Outstanding functionality
-- Customer authentication screens and complete account/profile journeys.
+- Firestore customer-profile provisioning and controlled profile updates; customer authentication UI is implemented but still needs Auth Emulator/browser verification.
 - Trusted Cloud Functions for server-side validation, idempotent order creation and guest order credentials.
 - COD/COP checkout, order confirmation, order history and tracking.
 - Staff order queue, cash collection and authorized status transitions.
@@ -64,4 +65,4 @@ Restaurant identity, currency, tax, delivery zones/fees, operating hours, suppor
 - Material scope or architecture changes return to the user for approval.
 
 ## Next action
-Complete customer authentication UI, then implement trusted order creation and the customer checkout/order lifecycle in the approved sequence. Record each phase and Goldfish evidence independently.
+Verify the authentication UI with the Firebase Auth Emulator, add trusted customer-profile provisioning, then implement trusted order creation and the customer checkout/order lifecycle in the approved sequence. Record each phase and Goldfish evidence independently.
