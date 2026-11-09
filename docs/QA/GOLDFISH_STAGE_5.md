@@ -214,7 +214,7 @@ The security baseline follows a sensible default-deny/trusted-write direction, b
 - **Evidence:** VERIFIED BY SOURCE
 - **Finding:** Emulator-based tests now cover public catalogue access, inactive catalogue denial, client write denial, customer/order ownership, guest direct-order denial, active/inactive staff order reads and saved-item ownership. CI invokes the suite after the production build.
 - **Recommendation:** Review the actual CI test output, fix any failing rule/test behavior, and add Storage rules tests. Do not deploy rules based only on the presence of test files.
-- **Status:** NOT YET VERIFIED. Initial CI runs failed at dependency installation because the selected rules test library had an incompatible Firebase peer dependency. Developer updated it to a Firebase-12-compatible release; the retest is pending.
+- **Status:** RESOLVED BY CI VERIFICATION. GitHub Actions run #94 passed the Vite build and all 11 Firestore/Storage Emulator security tests (8 Firestore, 3 Storage). The initial dependency peer-version issue and later Storage ArrayBuffer assertion issue were corrected.
 
 
 ## Follow-up inspection — live catalogue and currency-aware cart
@@ -247,7 +247,7 @@ The security baseline follows a sensible default-deny/trusted-write direction, b
 - **Severity:** Resolved test defect
 - **Evidence:** VERIFIED BY INTERACTION (GitHub Actions Emulator execution)
 - **Finding:** The first combined run executed all Firestore tests successfully and two Storage tests successfully, but one Storage read assertion failed because `getBytes()` returns an `ArrayBuffer`, not an iterable. The test was corrected to inspect a `Uint8Array`.
-- **Retest:** GitHub Actions run #94 passed the Vite build and all 11 Firestore/Storage security tests (8 Firestore, 3 Storage).
+- **Retest:** GitHub Actions run #94 and the later latest-source run #102 passed the Vite build and all 11 Firestore/Storage security tests (8 Firestore, 3 Storage).
 - **Status:** Corrected and CI-verified for the security rules/test revision.
 
 ### GF-S5-028 — Real Firebase data and user interactions remain untested
