@@ -1,6 +1,6 @@
 # QuickBite — Changelog
 
-Planning and documentation milestones only. No application implementation changes are recorded unless explicitly stated.
+Project planning, implementation and QA milestones.
 
 ## 2026-11-10
 
@@ -43,3 +43,11 @@ Planning and documentation milestones only. No application implementation change
 - Added `package.json`, `vite.config.js` and `.gitignore`.
 - Added Stage 5 implementation and independent Goldfish inspection records.
 - Build/runtime verification remains outstanding; the current interface is still a static demonstration.
+
+### Stage 5 Phase 2 — modular catalogue and cart preview
+- Extracted the reference styles into CSS modules and added the ES-module app bootstrap.
+- Implemented combined search/category filtering and native accessible category buttons.
+- Implemented an IndexedDB-backed local preview cart with quantity controls, remove, subtotal and empty state.
+- Kept cart separate from Orders; checkout remains disabled pending real restaurant configuration and trusted backend.
+- Added GitHub Actions build workflow. Initial build failure from top-level await was corrected; subsequent run is pending.
+- Goldfish follow-up findings saved in `docs/QA/GOLDFISH_STAGE_5.md`.
