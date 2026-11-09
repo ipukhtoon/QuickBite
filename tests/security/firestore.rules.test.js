@@ -133,3 +133,16 @@ test('customers can create and delete only their own saved-item records', async 
   await assertSucceeds(deleteDoc(savedItem));
   await assertFails(getDoc(doc(db, 'savedItems/customer-b/items/active-product')));
 });
+
+
+test('public users can read only active product option groups and choices', async () => {
+  const db = testEnv.unauthenticatedContext().firestore();
+  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size')));
+  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size/options/regular')));
+  await assertFails(getDoc(doc(db, 'optionGroups/active-size/options/hidden')));
+  await assertFails(getDoc(doc(db, 'optionGroups/inactive-size')));
+  await assertFails(getDoc(doc(db, 'optionGroups/inactive-size/options/regular')));
+  await assertFails(setDoc(doc(db, 'optionGroups/active-size/options/injected'), {
+    name: 'Injected', active: true, priceDeltaMinor: 0,
+  }));
+});
