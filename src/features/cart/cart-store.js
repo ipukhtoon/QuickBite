@@ -24,8 +24,18 @@ function makeLineKey(productId, optionIds = []) {
 }
 
 export class CartStore {
-  constructor(db) { this.db = db; }
+  constructor(db) {
+    this.db = db;
+    this.mutations = Promise.resolve();
+  }
+
   static async create() { return new CartStore(await openDatabase()); }
+
+  runMutation(operation) {
+    const task = this.mutations.then(operation);
+    this.mutations = task.catch(() => {});
+    return task;
+  } }
 
   async read() {
     return new Promise((resolve, reject) => {
@@ -59,7 +69,8 @@ export class CartStore {
     });
   }
 
-  async add(product) {
+  add(product) {
+    return this.runMutation(async () => {
     const lines = await this.read();
     const optionIds = Array.isArray(product.optionIds) ? product.optionIds : [];
     const lineKey = makeLineKey(product.id, optionIds);
@@ -89,20 +100,29 @@ export class CartStore {
       });
     }
     return this.write(lines);
+    });
   }
 
-  async setQuantity(lineKey, quantity) {
+  setQuantity(lineKey, quantity) {
+    return this.runMutation(async () => {
     const lines = await this.read();
     const line = lines.find((item) => item.lineKey === lineKey);
     if (!line) return lines;
-    if (!Number.isInteger(quantity) || quantity < 1) return this.remove(lineKey);
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      return this.write(lines.filter((item) => item.lineKey !== lineKey));
+    }
     line.quantity = Math.min(99, quantity);
     return this.write(lines);
+    });
   }
 
-  async remove(lineKey) {
-    return this.write((await this.read()).filter((line) => line.lineKey !== lineKey));
+  remove(lineKey) {
+    return this.runMutation(async () => this.write(
+      (await this.read()).filter((line) => line.lineKey !== lineKey),
+    ));
   }
 
-  async clear() { return this.write([]); }
+  clear() {
+    return this.runMutation(async () => this.write([]));
+  }
 }
