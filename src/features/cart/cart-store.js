@@ -16,6 +16,10 @@ function openDatabase() {
   });
 }
 
+function makeLineKey(productId, optionIds = []) {
+  return productId + '::' + [...optionIds].sort().join('|');
+}
+
 export class CartStore {
   constructor(db) { this.db = db; }
   static async create() { return new CartStore(await openDatabase()); }
@@ -37,19 +41,21 @@ export class CartStore {
   }
   async add(product) {
     const lines = await this.read();
-    const existing = lines.find((line) => line.productId === product.id);
+    const optionIds = Array.isArray(product.optionIds) ? product.optionIds : [];
+    const lineKey = makeLineKey(product.id, optionIds);
+    const existing = lines.find((line) => line.lineKey === lineKey);
     if (existing) existing.quantity = Math.min(99, existing.quantity + 1);
-    else lines.push({ productId: product.id, name: product.name, description: product.description, priceMinor: product.priceMinor, image: product.image, quantity: 1 });
+    else lines.push({ lineKey, productId: product.id, optionIds, options: Array.isArray(product.options) ? product.options : [], optionSummary: product.optionSummary || '', name: product.name, description: product.description, priceMinor: product.priceMinor, image: product.image, quantity: 1 });
     return this.write(lines);
   }
-  async setQuantity(productId, quantity) {
+  async setQuantity(lineKey, quantity) {
     const lines = await this.read();
-    const line = lines.find((item) => item.productId === productId);
+    const line = lines.find((item) => item.lineKey === lineKey);
     if (!line) return lines;
-    if (!Number.isInteger(quantity) || quantity < 1) return this.remove(productId);
+    if (!Number.isInteger(quantity) || quantity < 1) return this.remove(lineKey);
     line.quantity = Math.min(99, quantity);
     return this.write(lines);
   }
-  async remove(productId) { return this.write((await this.read()).filter((line) => line.productId !== productId)); }
+  async remove(lineKey) { return this.write((await this.read()).filter((line) => line.lineKey !== lineKey)); }
   async clear() { return this.write([]); }
 }
