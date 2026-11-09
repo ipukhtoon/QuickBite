@@ -8,12 +8,14 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test:security": "firebase emulators:exec --only firestore,storage --project demo-quickbite \"node --test tests/security/*.test.js\"",
-    "test:functions": "firebase emulators:exec --only auth,firestore,functions --project demo-quickbite \"npm --prefix functions test\""
+    "test:functions": "firebase emulators:exec --only auth,firestore,functions --project demo-quickbite \"npm --prefix functions test\"",
+    "test:cart": "node --test tests/cart/*.test.js"
   },
   "devDependencies": {
     "vite": "^6.0.0",
     "@firebase/rules-unit-testing": "^5.0.2",
-    "firebase-tools": "^14.22.0"
+    "firebase-tools": "^14.22.0",
+    "fake-indexeddb": "^6.2.2"
   },
   "dependencies": {
     "firebase": "^12.6.0"
