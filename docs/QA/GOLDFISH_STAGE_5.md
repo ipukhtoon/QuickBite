@@ -209,12 +209,12 @@ The security baseline follows a sensible default-deny/trusted-write direction, b
 
 ## Follow-up inspection — automated Firestore rules tests added
 
-### GF-S5-022 — Security test coverage now exists but is not yet verified
-- **Severity:** High until CI passes
-- **Evidence:** VERIFIED BY SOURCE
-- **Finding:** Emulator-based tests now cover public catalogue access, inactive catalogue denial, client write denial, customer/order ownership, guest direct-order denial, active/inactive staff order reads and saved-item ownership. CI invokes the suite after the production build.
-- **Recommendation:** Review the actual CI test output, fix any failing rule/test behavior, and add Storage rules tests. Do not deploy rules based only on the presence of test files.
-- **Status:** RESOLVED BY CI VERIFICATION. GitHub Actions run #94 passed the Vite build and all 11 Firestore/Storage Emulator security tests (8 Firestore, 3 Storage). The initial dependency peer-version issue and later Storage ArrayBuffer assertion issue were corrected.
+### GF-S5-022 — Firestore and Storage security tests pass in CI
+- **Severity:** Resolved verification item
+- **Evidence:** VERIFIED BY INTERACTION (GitHub Actions Emulator execution)
+- **Finding:** Emulator-based tests cover public catalogue access, inactive catalogue denial, client write denial, customer/order ownership, guest direct-order denial, active/inactive staff order reads, saved-item ownership, active/inactive option groups, public menu media reads and denied Storage uploads/private reads.
+- **Recommendation:** Expand test coverage as new rules and collections are added. Do not treat Emulator success as production deployment approval.
+- **Status:** RESOLVED. GitHub Actions run #94 passed all 11 Firestore/Storage Emulator security tests (8 Firestore, 3 Storage); run #102 passed the same suite with the latest application source. Initial dependency and ArrayBuffer assertion defects were corrected.
 
 
 ## Follow-up inspection — live catalogue and currency-aware cart
