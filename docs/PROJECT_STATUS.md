@@ -24,6 +24,7 @@ food_delivery_ui.html is the sole visual design authority. Preserve its coral/re
 - docs/QA/GOLDFISH_STAGE_4.md
 - docs/workflow/STAGE_5_IMPLEMENTATION.md
 - docs/QA/GOLDFISH_STAGE_5.md
+- docs/architecture/FIRESTORE_DATA_MODEL.md
 - docs/PROJECT_STATUS.md
 - docs/CHANGELOG.md
 
@@ -41,8 +42,9 @@ A responsive Vite frontend foundation, combined demo catalogue filtering and Ind
 - Independent initial QA findings are recorded in docs/QA/GOLDFISH_STAGE_5.md.
 - GitHub Actions run #35 passed the Vite production build for the product-options source revision. Browser/device interaction testing remains outstanding.
 - Product details/options preview and option-specific cart variants are implemented from demo configuration only.
-- Firebase SDK/client services, catalogue read repository, initial Firestore/Storage rules, indexes and emulator configuration are present; no Firebase project has been provisioned and rules have not been emulator-tested.
-- Next: add automated Firebase Emulator security tests and integrate the configured catalogue repository behind safe preview behavior; no production Firebase provisioning without separate authorization.
+- Firebase SDK/client services, catalogue read repository, initial Firestore/Storage rules, indexes and emulator configuration are present; no Firebase project has been provisioned.
+- Firestore Emulator security tests and a CI step have been added; their first run is pending.
+- Next: verify Firestore rules tests in CI, add Storage rules tests, then integrate the configured catalogue repository behind safe preview behavior; no production Firebase provisioning without separate authorization.
 - No production Firebase provisioning, live data migration, payment gateway activation or deployment is authorized.
 - Unknown restaurant-specific values must remain configurable and must not be fabricated.
 - Goldfish must independently inspect implementation evidence and report untested interactions honestly.
