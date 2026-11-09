@@ -7,7 +7,8 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test:security": "firebase emulators:exec --only firestore,storage --project demo-quickbite \"node --test tests/security/*.test.js\""
+    "test:security": "firebase emulators:exec --only firestore,storage --project demo-quickbite \"node --test tests/security/*.test.js\"",
+    "test:functions": "npm --prefix functions test"
   },
   "devDependencies": {
     "vite": "^6.0.0",
