@@ -10,20 +10,22 @@ A mobile-first, single-restaurant food-ordering application. QuickBite is not a 
 
 - Responsive customer catalogue preview.
 - Combined search and category filtering.
-- Product customization preview with required and optional sample options.
-- IndexedDB-backed local cart preview with option-specific cart lines.
-- Firebase client/authentication services and active catalogue repository scaffold.
-- Initial Firestore and Storage security rules, indexes and emulator configuration.
-- GitHub Actions production build and Firestore rules test workflow.
+- Firestore-backed catalogue integration when a complete Firebase configuration and public restaurant settings are supplied; demo preview otherwise.
+- Product customization with required/optional options and configured currency formatting.
+- IndexedDB-backed local cart preview with option-specific lines and serialized quantity updates.
+- Customer account interface for sign-in, registration, sign-out and password reset (requires Firebase configuration).
+- Firebase client/Auth services, Firestore catalogue repository, initial Firestore/Storage rules and indexes.
+- GitHub Actions production build plus Firestore/Storage Emulator security tests (11 tests currently passing).
 
 ## Important limitations
 
-- The menu and prices are demonstration data, not a real restaurant catalogue.
-- Demo amounts are not a configured currency.
+- Without Firebase configuration, the app shows sample menu data and demo amounts.
+- Live catalogue integration has not been tested against a real Firebase project.
 - Checkout is deliberately disabled.
 - No Firebase project has been provisioned or connected.
-- Authentication UI, trusted Cloud Functions, order creation, guest order retrieval, order history, saved items, profile, admin and staff workflows remain incomplete.
-- Firebase rules are an initial baseline and must pass Emulator Suite tests before deployment.
+- Authentication UI is implemented but has not been tested against Firebase Auth; Firestore customer-profile provisioning remains outstanding.
+- Trusted Cloud Functions, order creation, guest order retrieval, order history, saved items, full profile management, admin and staff workflows remain incomplete.
+- Firestore and Storage rules pass the current Emulator Suite tests, but remain an initial baseline requiring production review before deployment.
 - No production deployment or production data migration is authorized.
 
 ## Local development
@@ -42,7 +44,7 @@ npm run build
 npm run test:security
 ```
 
-`npm run test:security` starts the Firestore Emulator through Firebase CLI and runs the automated rules tests. Use only the `demo-quickbite` emulator project ID for the test suite; it is not a production project.
+`npm run test:security` starts Firestore and Storage emulators through Firebase CLI and runs the automated rules tests. Use only the `demo-quickbite` emulator project ID for the test suite; it is not a production project.
 
 ## Project governance
 
