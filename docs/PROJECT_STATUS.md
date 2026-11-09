@@ -8,46 +8,60 @@
 - Stage 2 — Critical Reviewer: COMPLETE
 - Stage 3 — Improvement: COMPLETE
 - Stage 4 — Approval: APPROVED BY USER — 2026-11-10
-- Stage 5 — Implementation: IN PROGRESS (responsive foundation, local cart preview, product options and Firebase/security foundation; Vite CI build passed; emulator/security and interaction testing outstanding, interaction testing outstanding)
+- Stage 5 — Implementation: IN PROGRESS
 
 ## Design authority
-food_delivery_ui.html is the sole visual design authority. Preserve its coral/red, white and light-gray visual language and Plus Jakarta Sans typography.
+`food_delivery_ui.html` is the sole visual design authority. Preserve its coral/red, white and light-gray visual language and Plus Jakarta Sans typography.
+
+## Implemented foundation
+- Responsive Vite/Vanilla JavaScript application entry and modular customer UI.
+- Combined catalogue search and category filtering.
+- IndexedDB local cart preview with product option variants, serialized updates and currency-aware display.
+- Product customization with required/optional option groups.
+- Firebase client and Auth service functions.
+- Firestore repository for public settings, active categories, active products and active product options.
+- Initial Firestore and Storage security rules, indexes and Emulator configuration.
+- Automated Firestore/Storage Emulator tests in GitHub Actions.
+
+## Verification status
+- GitHub Actions run #94 passed `npm install`, `npm run build` and all 11 Emulator security tests (8 Firestore, 3 Storage).
+- GitHub Actions run #102 is verifying the latest source revision after the catalogue loading and cart mutation refinements.
+- Source inspection has been performed on the current modules.
+- No browser interaction, visual screenshot or Android device test is claimed.
+- No Firebase project has been provisioned or connected; live catalogue integration has not been tested against real Firebase data.
+
+## Outstanding functionality
+- Customer authentication screens and complete account/profile journeys.
+- Trusted Cloud Functions for server-side validation, idempotent order creation and guest order credentials.
+- COD/COP checkout, order confirmation, order history and tracking.
+- Staff order queue, cash collection and authorized status transitions.
+- Admin menu, category, option, restaurant settings and staff management.
+- Offline/recovery behavior, accessibility and real Android verification.
+- Production security review and deployment.
 
 ## Documentation
-- docs/workflow/STAGE_1_ARCHITECT.md
-- docs/workflow/STAGE_2_CRITICAL_REVIEW.md
-- docs/workflow/STAGE_3_IMPROVEMENT.md
-- docs/workflow/STAGE_4_APPROVAL.md
-- docs/QA/GOLDFISH_STAGE_1.md
-- docs/QA/GOLDFISH_STAGE_2.md
-- docs/QA/GOLDFISH_STAGE_3.md
-- docs/QA/GOLDFISH_STAGE_4.md
-- docs/workflow/STAGE_5_IMPLEMENTATION.md
-- docs/QA/GOLDFISH_STAGE_5.md
-- docs/architecture/FIRESTORE_DATA_MODEL.md
-- docs/PROJECT_STATUS.md
-- docs/CHANGELOG.md
+- `docs/workflow/STAGE_1_ARCHITECT.md`
+- `docs/workflow/STAGE_2_CRITICAL_REVIEW.md`
+- `docs/workflow/STAGE_3_IMPROVEMENT.md`
+- `docs/workflow/STAGE_4_APPROVAL.md`
+- `docs/QA/GOLDFISH_STAGE_1.md`
+- `docs/QA/GOLDFISH_STAGE_2.md`
+- `docs/QA/GOLDFISH_STAGE_3.md`
+- `docs/QA/GOLDFISH_STAGE_4.md`
+- `docs/workflow/STAGE_5_IMPLEMENTATION.md`
+- `docs/QA/GOLDFISH_STAGE_5.md`
+- `docs/architecture/FIRESTORE_DATA_MODEL.md`
+- `docs/PROJECT_STATUS.md`
+- `docs/CHANGELOG.md`
 
 ## Open inputs
 Restaurant identity, currency, tax, delivery zones/fees, operating hours, support details, guest credential lifecycle, staff permission granularity, cancellation policy and hosting/domain must be confirmed or explicitly treated as configurable/pre-launch requirements.
 
-## Current implementation and outstanding gaps
-A responsive Vite frontend foundation, combined demo catalogue filtering and IndexedDB-backed local cart preview are implemented. The catalogue is still hardcoded sample content. Checkout/order creation, authoritative restaurant data, Firebase, authentication, customer accounts, order history, saved items, profile, admin/staff operations, security rules and trusted backend remain unimplemented. The cart is not a production order cart.
-
-## Stage 5 current scope
-- Stage 5 implementation record: docs/workflow/STAGE_5_IMPLEMENTATION.md
-- Goldfish Stage 5 report: docs/QA/GOLDFISH_STAGE_5.md
-- User approved Stage 4 and explicitly authorized Stage 5 on 2026-11-10.
-- Phase 1 repository foundation and Phase 2 modular catalogue/cart preview are recorded in docs/workflow/STAGE_5_IMPLEMENTATION.md.
-- Independent initial QA findings are recorded in docs/QA/GOLDFISH_STAGE_5.md.
-- GitHub Actions run #35 passed the Vite production build for the product-options source revision. Browser/device interaction testing remains outstanding.
-- Product details/options preview and option-specific cart variants are implemented from demo configuration only.
-- Firebase SDK/client services, catalogue read repository, initial Firestore/Storage rules, indexes and emulator configuration are present; no Firebase project has been provisioned.
-- Firestore Emulator security tests and a CI step have been added; their first run is pending.
-- Next: verify Firestore rules tests in CI, add Storage rules tests, then integrate the configured catalogue repository behind safe preview behavior; no production Firebase provisioning without separate authorization.
+## Approval boundaries
 - No production Firebase provisioning, live data migration, payment gateway activation or deployment is authorized.
+- Initial payment scope remains Cash on Delivery and Cash on Pickup; no online gateway is assumed configured.
 - Unknown restaurant-specific values must remain configurable and must not be fabricated.
-- Goldfish must independently inspect implementation evidence and report untested interactions honestly.
+- Material scope or architecture changes return to the user for approval.
 
 ## Next action
-Implement the approved Stage 5 sequence in small verifiable increments. Record each completed phase and its evidence. Return material scope or architecture changes to the user for approval.
+Complete customer authentication UI, then implement trusted order creation and the customer checkout/order lifecycle in the approved sequence. Record each phase and Goldfish evidence independently.
