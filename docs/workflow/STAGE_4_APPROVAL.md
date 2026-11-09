@@ -3,10 +3,10 @@
 **Project:** QuickBite  
 **Repository:** ipukhtoon/QuickBite  
 **Stage:** 4 — Approval  
-**Status:** AWAITING EXPLICIT USER APPROVAL  
-**Implementation authorization:** NOT GRANTED
+**Status:** APPROVED BY USER — 2026-11-10  
+**Implementation authorization:** GRANTED WITHIN THIS APPROVED PLAN
 
-> This is the final proposed implementation scope. It is not permission to begin Stage 5. No application source, Firebase project, production data or deployment has been changed by preparing this document.
+ > User explicitly instructed: “Save everything and move to stage 5.” This records approval to begin Stage 5 within the scope below. Production deployment, live payment activation, production data migration and unrelated changes remain unauthorized.
 
 ## 1. Project objective
 
@@ -274,3 +274,12 @@ Unresolved restaurant inputs may be represented as configurable settings and saf
 **Current status: AWAITING USER APPROVAL.**
 
 No Stage 5 implementation begins until the user explicitly approves this plan. Requested material changes must be incorporated and re-presented before implementation.
+
+
+## 13. Approval record
+
+- Decision: APPROVED
+- Approval date: 2026-11-10
+- Approval evidence: User instruction in project conversation: “Save everything and move to stage 5.”
+- Scope: Stage 5 implementation may begin according to this plan.
+- Exclusions: Production deployment, live payment gateway activation, production data migration and any material scope/architecture change require separate explicit authorization.
