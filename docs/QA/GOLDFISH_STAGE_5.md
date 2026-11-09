@@ -205,3 +205,13 @@ The product details dialog, keyboard selection, cart variant controls and Indexe
 ### Goldfish verdict
 
 The security baseline follows a sensible default-deny/trusted-write direction, but it is **not production-approved** until emulator tests prove ownership, staff authorization, public-data boundaries and denial cases. Goldfish has not modified the rules or any Firebase data.
+
+
+## Follow-up inspection — automated Firestore rules tests added
+
+### GF-S5-022 — Security test coverage now exists but is not yet verified
+- **Severity:** High until CI passes
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Emulator-based tests now cover public catalogue access, inactive catalogue denial, client write denial, customer/order ownership, guest direct-order denial, active/inactive staff order reads and saved-item ownership. CI invokes the suite after the production build.
+- **Recommendation:** Review the actual CI test output, fix any failing rule/test behavior, and add Storage rules tests. Do not deploy rules based only on the presence of test files.
+- **Status:** NOT YET VERIFIED until the new GitHub Actions run completes successfully.
