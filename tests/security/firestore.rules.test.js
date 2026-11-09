@@ -43,6 +43,21 @@ before(async () => {
     await setDoc(doc(db, 'products/inactive-product'), {
       name: 'Inactive product', active: false, sortOrder: 2, categoryId: 'active-category',
     });
+    await setDoc(doc(db, 'optionGroups/active-size'), {
+      name: 'Size', active: true, selectionType: 'single', required: true, minSelections: 1, maxSelections: 1,
+    });
+    await setDoc(doc(db, 'optionGroups/active-size/options/regular'), {
+      name: 'Regular', active: true, priceDeltaMinor: 0, sortOrder: 1,
+    });
+    await setDoc(doc(db, 'optionGroups/active-size/options/hidden'), {
+      name: 'Hidden', active: false, priceDeltaMinor: 100, sortOrder: 2,
+    });
+    await setDoc(doc(db, 'optionGroups/inactive-size'), {
+      name: 'Inactive size', active: false, selectionType: 'single',
+    });
+    await setDoc(doc(db, 'optionGroups/inactive-size/options/regular'), {
+      name: 'Regular', active: true, priceDeltaMinor: 0, sortOrder: 1,
+    });
     await setDoc(doc(db, 'customers/customer-a'), { displayName: 'Customer A' });
     await setDoc(doc(db, 'customers/customer-b'), { displayName: 'Customer B' });
     await setDoc(doc(db, 'orders/order-a'), {
@@ -138,7 +153,7 @@ test('customers can create and delete only their own saved-item records', async 
 test('public users can read only active product option groups and choices', async () => {
   const db = testEnv.unauthenticatedContext().firestore();
   await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size')));
-  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size/options/regular')));
+  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size/options/regular')));\n  await assertSucceeds(getDocs(query(\n    collection(db, 'optionGroups/active-size/options'),\n    where('active', '==', true),\n    orderBy('sortOrder', 'asc'),\n  )));
   await assertFails(getDoc(doc(db, 'optionGroups/active-size/options/hidden')));
   await assertFails(getDoc(doc(db, 'optionGroups/inactive-size')));
   await assertFails(getDoc(doc(db, 'optionGroups/inactive-size/options/regular')));
