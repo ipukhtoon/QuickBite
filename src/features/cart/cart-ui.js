@@ -120,14 +120,9 @@ export async function initCart() {
     const button = event.target.closest('[data-cart-action]');
     if (!button) return;
     const lineKey = button.dataset.lineKey;
-    const line = (await store.read()).find((item) => item.lineKey === lineKey);
     if (button.dataset.cartAction === 'remove') await store.remove(lineKey);
-    if (button.dataset.cartAction === 'increase' && line) {
-      await store.setQuantity(lineKey, line.quantity + 1);
-    }
-    if (button.dataset.cartAction === 'decrease' && line) {
-      await store.setQuantity(lineKey, line.quantity - 1);
-    }
+    if (button.dataset.cartAction === 'increase') await store.adjustQuantity(lineKey, 1);
+    if (button.dataset.cartAction === 'decrease') await store.adjustQuantity(lineKey, -1);
     await render();
   });
   dialog.addEventListener('click', (event) => {
