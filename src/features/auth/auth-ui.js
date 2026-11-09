@@ -26,6 +26,7 @@ export function initAuthUI() {
   const signInEmail = document.getElementById('signInEmail');
   const retryProfileSyncButton = document.getElementById('retryProfileSync');
   let profileSyncUid = null;
+  let currentUid = null;
 
   function showMessage(text, isError = false) {
     message.textContent = text;
@@ -70,6 +71,7 @@ export function initAuthUI() {
       const auth = await import('../../services/firebase/auth.js');
       auth.observeAuthState((user) => {
         const signedIn = Boolean(user);
+        currentUid = signedIn ? user.uid : null;
         guestPanel.hidden = signedIn;
         signedInPanel.hidden = !signedIn;
         document.getElementById('accountCloseAction').textContent = signedIn ? 'Close' : 'Continue as guest';
@@ -151,7 +153,7 @@ export function initAuthUI() {
         showMessage('Retrying profile setup…');
         try {
           await auth.ensureCustomerProfile();
-          profileSyncUid = null;
+          profileSyncUid = currentUid;
           retryProfileSyncButton.hidden = true;
           showMessage('Your customer profile is ready.');
         } catch (error) {
