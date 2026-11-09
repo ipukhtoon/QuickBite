@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function owns(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function activeStaff() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/staff/$(request.auth.uid))
+        && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.active == true
+        && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['staff', 'admin'];
+    }
+
+    function admin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/staff/$(request.auth.uid))
+        && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.active == true
+        && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Public storefront configuration contains only fields approved for public display.
+    match /settings/public {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /categories/{categoryId} {
+      allow get, list: if resource.data.active == true;
+      allow create, update, delete: if false;
+    }
+
+    match /products/{productId} {
+      allow get, list: if resource.data.active == true;
+      allow create, update, delete: if false;
+    }
+
+    // Customer profile data is private; privileged writes are reserved for trusted functions.
+    match /customers/{uid} {
+      allow get: if owns(uid) || admin();
+      allow list, create, update, delete: if false;
+    }
+
+    match /staff/{uid} {
+      allow get: if owns(uid) || admin();
+      allow list, create, update, delete: if false;
+    }
+
+    match /savedItems/{uid}/items/{productId} {
+      allow get, list: if owns(uid);
+      allow create: if owns(uid)
+        && request.resource.data.keys().hasOnly(['productId', 'createdAt'])
+        && request.resource.data.productId == productId
+        && request.resource.data.createdAt == request.time;
+      allow delete: if owns(uid);
+      allow update: if false;
+    }
+
+    match /orders/{orderId} {
+      allow get, list: if (signedIn() && resource.data.customerUid == request.auth.uid) || activeStaff();
+      allow create, update, delete: if false;
+
+      match /events/{eventId} {
+        allow get, list: if (signedIn()
+          && get(/databases/$(database)/documents/orders/$(orderId)).data.customerUid == request.auth.uid)
+          || activeStaff();
+        allow create, update, delete: if false;
+      }
+    }
+
+    // Guest order retrieval and every privileged write must go through trusted functions.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
