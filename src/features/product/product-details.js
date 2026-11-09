@@ -107,7 +107,7 @@ export function initProductDetails({ onAdd }) {
         input.dataset.optionId = choice.id;
         input.dataset.optionLabel = choice.label;
         input.dataset.deltaMinor = String(Number.isInteger(choice.deltaMinor) ? choice.deltaMinor : 0);
-        if (group.type === 'single' && index === 0) input.checked = true;
+        if (group.type === 'single' && index === 0 && (group.required || group.min > 0)) input.checked = true;
         input.addEventListener('change', updatePrice);
 
         const text = document.createElement('span');
