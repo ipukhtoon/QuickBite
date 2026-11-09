@@ -123,14 +123,14 @@
 
 ## Phase 4 — Firebase client, data access and security baseline
 
-**Status: IMPLEMENTED IN REPOSITORY; VITE BUILD PASSED; EMULATOR SECURITY TESTS NOT YET RUN**
+**Status: IMPLEMENTED IN REPOSITORY; FIRESTORE AND STORAGE EMULATOR TESTS PASSED**
 
 ### Changes
 - Added Firebase JavaScript SDK dependency.
 - Added `.env.example` with blank Firebase client configuration placeholders; no credentials or project ID were added.
 - Added guarded Firebase app/Auth/Firestore/Storage initialization. The app returns an unconfigured state instead of initializing with fabricated values.
 - Added customer authentication service functions for registration, sign-in, sign-out, password reset and auth-state observation.
-- Added Firestore active category/product read repository functions.
+- Added Firestore active category/product read repository functions; live menu data and product option groups are now connected to the customer catalogue when valid Firebase configuration is supplied.
 - Added initial Firestore rules: public active catalogue reads, owner-scoped customer/saved-item reads, owner/staff order reads, and default-deny/trusted-write-only policies for orders, staff, catalogue and settings.
 - Added read-only public menu media Storage policy and denied direct client uploads.
 - Added Firestore indexes for active catalogue and category-filtered product queries.
@@ -152,18 +152,19 @@
 ### Verification and limitations
 - GitHub Actions run #53 passed dependency installation and `npm run build` after Firebase SDK/client modules and security configuration were added.
 - Source inspection confirms client configuration requires all Firebase config values and no project credentials are committed.
-- Firestore/Storage rules have **not** been deployed or tested in the Firebase Emulator Suite. Treat them as an initial security baseline, not a production security certification.
+- Firestore/Storage rules have **not** been deployed to a real Firebase project. Emulator tests now verify the tested access boundaries, but this is not a production security certification.
 - No Firebase project was provisioned, no production data accessed, and no rules deployed.
-- Authentication UI, catalogue-to-Firestore integration, Cloud Functions, order creation and guest order retrieval remain outstanding.
+- Authentication UI, trusted Cloud Functions, order creation and guest order retrieval remain outstanding.
 - Public `settings/public` must contain public-safe fields only because Firestore rules cannot redact fields inside a readable document.
 
-## Phase 5 — Automated Firestore security rules tests
+## Phase 5 — Automated Firestore and Storage security rules tests
 
-**Status: TEST SUITE AND CI STEP ADDED; DEPENDENCY FIX APPLIED; CI RETEST PENDING**
+**Status: IMPLEMENTED AND VERIFIED IN GITHUB ACTIONS RUN #94**
 
 ### Changes
 - Added `@firebase/rules-unit-testing` and Firebase CLI development dependencies.
-- Added automated Firestore Emulator tests for public settings/catalogue access, inactive product denial, catalogue write denial, customer ownership, order ownership/query restrictions, guest direct-order denial, active/inactive staff access and saved-item ownership.
+- Added automated Firestore Emulator tests for public settings/catalogue access, inactive product denial, catalogue write denial, active/inactive option groups and choices, customer ownership, order ownership/query restrictions, guest direct-order denial, active/inactive staff access and saved-item ownership.
+- Added Storage Emulator tests for public menu media reads, denied public uploads and denied private-path reads.
 - Added `npm run test:security`.
 - Updated GitHub Actions to execute the Firestore rules tests after the Vite build.
 
@@ -178,6 +179,43 @@
 - Tests are written against the Firebase Emulator Suite and synthetic test records only.
 - No production Firebase project, production data or deployed rules are involved.
 - Storage rules are not yet covered by automated emulator tests.
+
+## Phase 6 — Live catalogue integration and currency-aware cart preview
+
+**Status: IMPLEMENTED IN REPOSITORY; FINAL SOURCE CI RUN #102 PENDING**
+
+### Changes
+- Added public restaurant settings retrieval and strict currency-code validation.
+- Connected active Firestore categories and products to the catalogue when Firebase is fully configured.
+- Connected product option groups and active option choices using the approved Firestore data contract.
+- Replaced demo cards with safely constructed live product cards; user-provided strings are inserted through DOM text APIs, and remote menu images must use HTTPS.
+- Added live currency formatting for catalogue prices, product option deltas and cart lines.
+- Invalid product prices, malformed option groups, inactive/missing referenced groups and malformed option references prevent the affected product from being added.
+- Added an explicit loading state so configured environments do not briefly expose the sample catalogue while live data loads.
+- The app remains in demo-preview mode only when Firebase is not configured. A configured but failing Firebase connection shows an error and does not silently fall back to sample products.
+- Preserved product option snapshots in the local cart, refreshed a matching cart line's display price when the customer adds it again, and displayed a warning when saved cart lines contain mixed currencies.
+- Serialized cart mutations and added atomic quantity adjustment so rapid taps do not overwrite one another.
+- Clarified that cart values are previews and checkout remains unavailable.
+
+### Files
+- `src/services/catalogue/catalogue-repository.js`
+- `src/features/catalogue/catalogue.js`
+- `src/features/product/product-details.js`
+- `src/features/cart/cart-store.js`
+- `src/features/cart/cart-ui.js`
+- `firestore.rules`
+- `firestore.indexes.json`
+- `tests/security/firestore.rules.test.js`
+- `tests/security/storage.rules.test.js`
+- `index.html`
+
+### Verification and limitations
+- Source inspection confirms the repository, product dialog and cart use the same configured currency and option snapshots.
+- GitHub Actions run #94 passed the Firestore and Storage Emulator suite for the current rules/test files.
+- GitHub Actions run #102 is checking the latest combined source revision, including loading-state and serialized cart changes; do not treat the latest source as build-verified until this run completes.
+- No Firebase project credentials are configured; live catalogue integration has not been exercised against a real Firebase project.
+- No browser interaction, visual screenshot or Android device testing is claimed.
+- Cart prices remain local display snapshots. A previously saved cart line is not authoritatively re-priced until it is reselected/re-added; trusted checkout must always revalidate current product/option prices and availability on the server. Checkout remains disabled.
 
 ## Remaining implementation phases
 
