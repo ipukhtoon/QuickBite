@@ -80,3 +80,21 @@ Project planning, implementation and QA milestones.
 - Added Emulator-based Firestore security tests for customer/order ownership, guest denial, active/inactive staff, public catalogue and saved-item boundaries.
 - Added `test:security` and wired the suite into GitHub Actions.
 - CI result pending; Storage rules tests remain outstanding.
+
+
+## Stage 5 — Live catalogue and security verification
+
+### Added
+- Connected configured Firestore public settings, active categories, products and product option groups to the customer catalogue.
+- Added live currency formatting and malformed-data/option validation.
+- Added a catalogue loading state and prevented demo content from being shown while a configured live catalogue loads.
+- Added currency-aware local cart rows, serialized mutations and atomic quantity adjustments.
+- Added Firestore rules and indexes for active option groups and choices.
+- Added Firestore and Storage Emulator security tests to CI.
+
+### Verification
+- GitHub Actions run #94 passed the production build and all 11 Emulator security tests (8 Firestore, 3 Storage).
+- A Storage test assertion issue was corrected after the first combined run; the corrected suite passed.
+- GitHub Actions run #102 is checking the latest source revision after cart mutation and loading-state refinements.
+- No real Firebase project is connected; no browser or Android interaction testing is claimed.
+- Checkout remains disabled. Trusted order creation, server-side price validation, authentication UI, staff/admin operations and production deployment remain outstanding.
