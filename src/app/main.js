@@ -1,8 +1,19 @@
 import { initCatalogue } from '../features/catalogue/catalogue.js';
 import { initCart } from '../features/cart/cart-ui.js';
 
-const cart = await initCart();
-initCatalogue({ onAdd: (product) => cart.add(product) });
+async function bootstrap() {
+  const cart = await initCart();
+  initCatalogue({ onAdd: (product) => cart.add(product) });
+}
+
+bootstrap().catch((error) => {
+  const notice = document.getElementById('appNotice');
+  if (notice) {
+    notice.textContent = 'QuickBite could not initialize correctly. Please reload the page.';
+    notice.hidden = false;
+  }
+  console.error('QuickBite initialization failed:', error);
+});
 
 // Keep the reference navigation responsive without pretending unfinished routes work.
 document.querySelectorAll('[data-nav]').forEach((item) => {
