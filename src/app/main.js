@@ -1,5 +1,3 @@
-import '../styles/tokens.css';
-import '../styles/main.css';
 import { initCatalogue } from '../features/catalogue/catalogue.js';
 import { initCart } from '../features/cart/cart-ui.js';
 
