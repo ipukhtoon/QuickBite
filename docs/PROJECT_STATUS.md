@@ -8,7 +8,7 @@
 - Stage 2 — Critical Reviewer: COMPLETE
 - Stage 3 — Improvement: COMPLETE
 - Stage 4 — Approval: APPROVED BY USER — 2026-11-10
-- Stage 5 — Implementation: IN PROGRESS (foundation phase; no production deployment authorized)
+- Stage 5 — Implementation: IN PROGRESS (responsive foundation and local cart preview; build verification pending)
 
 ## Design authority
 food_delivery_ui.html is the sole visual design authority. Preserve its coral/red, white and light-gray visual language and Plus Jakarta Sans typography.
@@ -22,22 +22,24 @@ food_delivery_ui.html is the sole visual design authority. Preserve its coral/re
 - docs/QA/GOLDFISH_STAGE_2.md
 - docs/QA/GOLDFISH_STAGE_3.md
 - docs/QA/GOLDFISH_STAGE_4.md
+- docs/workflow/STAGE_5_IMPLEMENTATION.md
+- docs/QA/GOLDFISH_STAGE_5.md
 - docs/PROJECT_STATUS.md
 - docs/CHANGELOG.md
 
 ## Open inputs
 Restaurant identity, currency, tax, delivery zones/fees, operating hours, support details, guest credential lifecycle, staff permission granularity, cancellation policy and hosting/domain must be confirmed or explicitly treated as configurable/pre-launch requirements.
 
-## Outstanding application gaps
-The current HTML remains a static demonstration. Real cart, checkout, order creation, authentication, customer accounts, admin/staff operations, persistence, security and responsive production layout remain unimplemented.
+## Current implementation and outstanding gaps
+A responsive Vite frontend foundation, combined demo catalogue filtering and IndexedDB-backed local cart preview are implemented. The catalogue is still hardcoded sample content. Checkout/order creation, authoritative restaurant data, Firebase, authentication, customer accounts, order history, saved items, profile, admin/staff operations, security rules and trusted backend remain unimplemented. The cart is not a production order cart.
 
 ## Stage 5 current scope
 - Stage 5 implementation record: docs/workflow/STAGE_5_IMPLEMENTATION.md
 - Goldfish Stage 5 report: docs/QA/GOLDFISH_STAGE_5.md
 - User approved Stage 4 and explicitly authorized Stage 5 on 2026-11-10.
-- Phase 1 repository foundation is recorded in docs/workflow/STAGE_5_IMPLEMENTATION.md.
+- Phase 1 repository foundation and Phase 2 modular catalogue/cart preview are recorded in docs/workflow/STAGE_5_IMPLEMENTATION.md.
 - Independent initial QA findings are recorded in docs/QA/GOLDFISH_STAGE_5.md.
-- Begin with repository foundation and responsive UI migration while preserving the design authority.
+- Next: obtain a passing CI build, then continue with product detail/options and data-contract preparation while preserving the design authority.
 - No production Firebase provisioning, live data migration, payment gateway activation or deployment is authorized.
 - Unknown restaurant-specific values must remain configurable and must not be fabricated.
 - Goldfish must independently inspect implementation evidence and report untested interactions honestly.
