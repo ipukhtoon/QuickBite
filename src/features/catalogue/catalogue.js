@@ -47,10 +47,11 @@ function createProductCard(product, currencyCode) {
   card._quickbiteProduct = { ...product, currencyCode };
 
   const image = document.createElement('img');
-  image.src = validImageUrl(product.imageUrl);
+  const imageUrl = validImageUrl(product.imageUrl);
+  if (imageUrl) image.src = imageUrl;
   image.alt = product.name;
   image.loading = 'lazy';
-  image.hidden = !image.src;
+  image.hidden = !imageUrl;
   const title = document.createElement('div');
   title.className = 'food-title';
   title.textContent = product.name;
@@ -66,7 +67,7 @@ function createProductCard(product, currencyCode) {
   footer.className = 'food-footer';
   const price = document.createElement('span');
   price.className = 'food-price';
-  price.textContent = Number.isInteger(product.priceMinor)
+  price.textContent = Number.isInteger(product.priceMinor) && product.priceMinor >= 0
     ? formatCurrency(product.priceMinor, currencyCode)
     : 'Price unavailable';
   const add = document.createElement('button');
