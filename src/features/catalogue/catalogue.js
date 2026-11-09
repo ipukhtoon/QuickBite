@@ -137,6 +137,12 @@ export function initCatalogue() {
     return;
   }
 
+  grid.replaceChildren();
+  chipsContainer.replaceChildren();
+  applyFilters();
+  const loadingState = document.getElementById('catalogueEmpty');
+  if (loadingState) loadingState.textContent = 'Loading restaurant menu…';
+
   (async () => {
     try {
       const [settings, categories, products] = await Promise.all([
@@ -156,6 +162,7 @@ export function initCatalogue() {
       if (notice) notice.hidden = true;
     } catch (error) {
       grid.replaceChildren();
+      chipsContainer.replaceChildren();
       if (notice) {
         notice.textContent = 'The restaurant menu could not be loaded. Please try again later.';
         notice.hidden = false;
