@@ -171,18 +171,17 @@
 ### Files
 - `package.json`
 - `tests/security/firestore.rules.test.js`
+- `tests/security/storage.rules.test.js`
 - `.github/workflows/build.yml`
 
 ### Verification and limitations
-- Initial CI attempts failed during dependency installation because rules-unit-testing 4.0.1 required Firebase 11 while the application uses Firebase 12. The test library was upgraded to 5.0.2 to match Firebase 12; the new CI run is pending.
-- Do not record the security suite as passed until the emulator tests themselves complete successfully.
-- Tests are written against the Firebase Emulator Suite and synthetic test records only.
-- No production Firebase project, production data or deployed rules are involved.
-- Storage rules are not yet covered by automated emulator tests.
+- GitHub Actions run #94 passed dependency installation, `npm run build` and `npm run test:security` using Firestore and Storage emulators. All 11 tests passed (8 Firestore, 3 Storage).
+- An earlier Storage test failed because the test treated the SDK's returned `ArrayBuffer` as an iterable; the assertion was corrected to inspect a `Uint8Array`, then the complete suite passed.
+- Tests use synthetic emulator records only. No production Firebase project, production data or deployed rules are involved.
 
 ## Phase 6 — Live catalogue integration and currency-aware cart preview
 
-**Status: IMPLEMENTED IN REPOSITORY; FINAL SOURCE CI RUN #102 PENDING**
+**Status: IMPLEMENTED IN REPOSITORY; FINAL SOURCE CI RUN #102 PASSED**
 
 ### Changes
 - Added public restaurant settings retrieval and strict currency-code validation.
@@ -212,23 +211,21 @@
 ### Verification and limitations
 - Source inspection confirms the repository, product dialog and cart use the same configured currency and option snapshots.
 - GitHub Actions run #94 passed the Firestore and Storage Emulator suite for the current rules/test files.
-- GitHub Actions run #102 is checking the latest combined source revision, including loading-state and serialized cart changes; do not treat the latest source as build-verified until this run completes.
+- GitHub Actions run #102 passed dependency installation, `npm run build` and the Firestore/Storage Emulator security suite for the latest combined source revision, including loading-state and serialized cart changes.
 - No Firebase project credentials are configured; live catalogue integration has not been exercised against a real Firebase project.
 - No browser interaction, visual screenshot or Android device testing is claimed.
 - Cart prices remain local display snapshots. A previously saved cart line is not authoritatively re-priced until it is reselected/re-added; trusted checkout must always revalidate current product/option prices and availability on the server. Checkout remains disabled.
 
 ## Remaining implementation phases
 
-1. Extract and formalize the design system; modularize the customer UI while matching the reference.
-2. Implement catalogue/search/product details/cart with real data contracts.
-3. Implement Firebase client configuration and authentication after environment configuration is agreed.
-4. Design and test Firestore schema, rules, indexes and local persistence.
-5. Implement trusted guest/customer order creation and idempotency.
-6. Implement checkout, order confirmation, order history and tracking.
-7. Implement staff queue and authorized cash/status operations.
-8. Implement admin operations and restaurant configuration.
-9. Complete accessibility, Android responsiveness, offline handling, recovery and security tests.
-10. Run independent Goldfish review, fix defects, regression test and update verification evidence.
+1. Implement customer authentication screens and connect the existing Firebase Auth service functions.
+2. Add customer profile creation/update through trusted backend operations and validate privacy boundaries.
+3. Implement Cloud Functions for idempotent guest/customer order creation, server-side catalogue/option/price validation and safe guest order credentials.
+4. Implement COD/COP checkout, order confirmation, customer order history and tracking.
+5. Implement staff order queue, role-checked status transitions and cash collection workflow.
+6. Implement admin menu, category, option, restaurant settings and staff management.
+7. Complete accessibility, responsive Android testing, offline/recovery behavior and additional security tests.
+8. Run independent Goldfish review, fix defects, regression test and update verification evidence.
 
 ## Approval boundaries
 
