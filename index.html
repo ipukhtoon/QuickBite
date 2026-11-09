@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/src/styles/tokens.css">
     <link rel="stylesheet" href="/src/styles/main.css">
     <!-- Google Fonts & FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     
@@ -17,13 +18,14 @@
     <div class="phone-frame">
         <!-- Scrollable Dashboard Content -->
         <div class="scroll-container">
+            <p id="appNotice" class="app-notice" role="status" aria-live="polite" hidden></p>
             
             <!-- Top App Header -->
             <div class="header">
                 <div class="location-box">
                     <h4>DELIVERY ADDRESS</h4>
                     <div class="city">
-                        <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> San Francisco, CA <i class="fa-solid fa-angle-down" style="font-size: 12px;"></i>
+                        <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> Choose delivery location <i class="fa-solid fa-angle-down" style="font-size: 12px;"></i>
                     </div>
                 </div>
                 <button class="header-cart" type="button" data-open-cart aria-label="Open cart"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i><span>Cart</span><span class="cart-badge" id="cartBadge" aria-live="polite">0</span></button>
@@ -38,19 +40,11 @@
 
             <!-- Promo Banner -->
             <div class="preview-notice" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Menu preview — sample items and prices, not a live restaurant menu.</span></div>
-            <div class="promo-banner" hidden>
-                <div class="promo-text">
-                    <h2>Get Special Discount</h2>
-                    <p>Up to 50% off on your first order</p>
-                    <button class="promo-btn" onclick="alert('Promo code applied successfully!')">Claim Now</button>
-                </div>
-                <div class="promo-img">🍔</div>
-            </div>
 
             <!-- Categories Horizontal List -->
             <div class="section-header">
                 <h3>Categories</h3>
-                <a href="#">See All</a>
+                
             </div>
             <div class="categories" id="categoriesContainer">
                 <div class="category-chip active" data-category="all"><span>🔥</span> All</div>
@@ -63,7 +57,7 @@
             <!-- Food Items Grid -->
             <div class="section-header">
                 <h3>Popular Items</h3>
-                <a href="#">Filter</a>
+                
             </div>
             
             <div class="food-grid" id="foodGrid">
