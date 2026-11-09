@@ -17,8 +17,8 @@ Project planning, implementation and QA milestones.
 - Preserve original coral/red, white and light-gray design language.
 - Guest checkout is required.
 - Initial payment scope is Cash on Delivery and Cash on Pickup; no online gateway is assumed configured.
-- Stages 1, 2 and 3 complete.
-- Stage 4 plan is awaiting explicit user approval.
+- Stages 1, 2 and 3 complete at the time of this initial planning record.
+- Stage 4 was subsequently approved by the user on 2026-11-10.
 - No application source code, Firebase configuration, production data or deployment was changed.
 
 
@@ -79,7 +79,7 @@ Project planning, implementation and QA milestones.
 ### Stage 5 Phase 5 — Firestore rules test suite
 - Added Emulator-based Firestore security tests for customer/order ownership, guest denial, active/inactive staff, public catalogue and saved-item boundaries.
 - Added `test:security` and wired the suite into GitHub Actions.
-- CI result pending; Storage rules tests remain outstanding.
+- GitHub Actions run #94 passed all 11 Firestore/Storage Emulator tests (8 Firestore, 3 Storage).
 
 
 ## Stage 5 — Live catalogue and security verification
@@ -95,6 +95,6 @@ Project planning, implementation and QA milestones.
 ### Verification
 - GitHub Actions run #94 passed the production build and all 11 Emulator security tests (8 Firestore, 3 Storage).
 - A Storage test assertion issue was corrected after the first combined run; the corrected suite passed.
-- GitHub Actions run #102 is checking the latest source revision after cart mutation and loading-state refinements.
+- GitHub Actions run #102 passed dependency installation, the production build and all 11 Firestore/Storage Emulator tests for the latest source revision.
 - No real Firebase project is connected; no browser or Android interaction testing is claimed.
 - Checkout remains disabled. Trusted order creation, server-side price validation, authentication UI, staff/admin operations and production deployment remain outstanding.
