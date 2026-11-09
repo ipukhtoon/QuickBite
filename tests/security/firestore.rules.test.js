@@ -99,6 +99,23 @@ test('public users cannot read inactive products or write catalogue records', as
   }));
 });
 
+test('public users can read only active product option groups and choices', async () => {
+  const db = testEnv.unauthenticatedContext().firestore();
+  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size')));
+  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size/options/regular')));
+  await assertSucceeds(getDocs(query(
+    collection(db, 'optionGroups/active-size/options'),
+    where('active', '==', true),
+    orderBy('sortOrder', 'asc'),
+  )));
+  await assertFails(getDoc(doc(db, 'optionGroups/active-size/options/hidden')));
+  await assertFails(getDoc(doc(db, 'optionGroups/inactive-size')));
+  await assertFails(getDoc(doc(db, 'optionGroups/inactive-size/options/regular')));
+  await assertFails(setDoc(doc(db, 'optionGroups/active-size/options/injected'), {
+    name: 'Injected', active: true, priceDeltaMinor: 0,
+  }));
+});
+
 test('customers can read only their own customer record', async () => {
   const db = testEnv.authenticatedContext('customer-a').firestore();
   await assertSucceeds(getDoc(doc(db, 'customers/customer-a')));
@@ -147,17 +164,4 @@ test('customers can create and delete only their own saved-item records', async 
   await assertSucceeds(getDoc(savedItem));
   await assertSucceeds(deleteDoc(savedItem));
   await assertFails(getDoc(doc(db, 'savedItems/customer-b/items/active-product')));
-});
-
-
-test('public users can read only active product option groups and choices', async () => {
-  const db = testEnv.unauthenticatedContext().firestore();
-  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size')));
-  await assertSucceeds(getDoc(doc(db, 'optionGroups/active-size/options/regular')));\n  await assertSucceeds(getDocs(query(\n    collection(db, 'optionGroups/active-size/options'),\n    where('active', '==', true),\n    orderBy('sortOrder', 'asc'),\n  )));
-  await assertFails(getDoc(doc(db, 'optionGroups/active-size/options/hidden')));
-  await assertFails(getDoc(doc(db, 'optionGroups/inactive-size')));
-  await assertFails(getDoc(doc(db, 'optionGroups/inactive-size/options/regular')));
-  await assertFails(setDoc(doc(db, 'optionGroups/active-size/options/injected'), {
-    name: 'Injected', active: true, priceDeltaMinor: 0,
-  }));
 });
