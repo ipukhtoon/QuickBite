@@ -56,3 +56,10 @@ Project planning, implementation and QA milestones.
 - GitHub Actions run #12 passed dependency installation and `npm run build` for implementation commit `4ef2a3060c026121d519b4aa8173b0575315d944`.
 - A top-level-await compatibility failure was corrected before the passing run.
 - No browser/device interaction testing is claimed.
+
+### Stage 5 Phase 3 — product options preview
+- Added product customization dialog with required/optional option groups and live demo price deltas.
+- Routed all catalogue add controls through option selection.
+- Persisted option snapshots and distinct product variants in the IndexedDB cart.
+- Added source-level Goldfish review and documented untested browser/IndexedDB behavior.
+- Latest GitHub Actions verification is pending.
