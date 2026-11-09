@@ -216,6 +216,37 @@
 - No browser interaction, visual screenshot or Android device testing is claimed.
 - Cart prices remain local display snapshots. A previously saved cart line is not authoritatively re-priced until it is reselected/re-added; trusted checkout must always revalidate current product/option prices and availability on the server. Checkout remains disabled.
 
+## Phase 7 — Customer authentication interface
+
+**Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS RUN #123 PENDING**
+
+### Changes
+- Added an account dialog reachable from the Profile navigation item.
+- Added sign-in, customer registration, sign-out and password-reset request forms using the existing Firebase Authentication service functions.
+- Added accessible labels, autocomplete hints, password length validation, pending states and user-friendly authentication error messages.
+- Added a signed-in account summary using Firebase Auth display name and email.
+- Preserved guest browsing. When Firebase configuration is absent, the dialog clearly explains that account actions are unavailable and keeps sign-in/register forms disabled.
+- Split Firebase environment configuration from SDK initialization and lazy-load Firebase catalogue/auth modules only when the environment is configured, reducing unnecessary SDK loading in demo mode.
+- Updated the account close action label based on signed-in/guest state.
+
+### Files
+- `index.html`
+- `src/app/main.js`
+- `src/features/auth/auth-ui.js`
+- `src/services/firebase/config.js`
+- `src/services/firebase/client.js`
+- `src/services/firebase/auth.js`
+- `src/features/catalogue/catalogue.js`
+- `src/styles/main.css`
+
+### Verification and limitations
+- Source inspection confirms Profile navigation opens the account dialog and the UI calls the existing Firebase Auth registration/sign-in/sign-out/password-reset functions.
+- Firebase configuration is not present, so live authentication has not been exercised.
+- GitHub Actions run #123 is pending for the authentication UI and lazy-loading source revision.
+- No browser interaction, visual screenshot, Firebase Auth Emulator test or Android device test is claimed.
+- Registration currently creates a Firebase Authentication user and updates the Auth display name. It does not yet create a Firestore `customers/{uid}` profile document; trusted customer-profile provisioning/update remains outstanding.
+- Email/password provider enablement and password-reset email delivery settings must be configured in the selected Firebase project before use.
+
 ## Remaining implementation phases
 
 1. Implement customer authentication screens and connect the existing Firebase Auth service functions.
