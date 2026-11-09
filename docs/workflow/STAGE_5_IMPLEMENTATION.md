@@ -166,7 +166,7 @@
 - Added automated Firestore Emulator tests for public settings/catalogue access, inactive product denial, catalogue write denial, active/inactive option groups and choices, customer ownership, order ownership/query restrictions, guest direct-order denial, active/inactive staff access and saved-item ownership.
 - Added Storage Emulator tests for public menu media reads, denied public uploads and denied private-path reads.
 - Added `npm run test:security`.
-- Updated GitHub Actions to execute the Firestore rules tests after the Vite build.
+- Updated GitHub Actions to execute Firestore and Storage rules tests after the Vite build.
 
 ### Files
 - `package.json`
