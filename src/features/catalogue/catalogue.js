@@ -159,6 +159,8 @@ export function initCatalogue() {
       if (address && settings.publicAddress) address.textContent = settings.publicAddress;
       const heading = document.querySelector('.location-box h4');
       if (heading) heading.textContent = settings.displayName || 'RESTAURANT';
+      const previewLabel = document.querySelector('.preview-notice span');
+      if (previewLabel) previewLabel.textContent = 'Live menu — prices and availability are loaded from the restaurant catalogue.';
       if (notice) notice.hidden = true;
     } catch (error) {
       grid.replaceChildren();
