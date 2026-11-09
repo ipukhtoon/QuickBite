@@ -67,3 +67,11 @@ Project planning, implementation and QA milestones.
 ### Product options build verification
 - GitHub Actions run #35 passed `npm run build` for the product-options implementation revision.
 - Browser/device interaction testing remains outstanding.
+
+### Stage 5 Phase 4 — Firebase and security baseline
+- Added Firebase SDK, environment template and guarded client initialization.
+- Added authentication service functions and active catalogue read repository.
+- Added initial Firestore/Storage rules, catalogue indexes and emulator configuration.
+- Added Firestore data-model and trust-boundary documentation.
+- GitHub Actions run #53 passed the Vite production build. Firebase Emulator security tests have not yet been run.
+- No Firebase project provisioning, rules deployment or production data access occurred.
