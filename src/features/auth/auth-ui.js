@@ -14,7 +14,7 @@ function friendlyError(error) {
   return errorMessages[error?.code] || 'We could not complete that request. Please try again.';
 }
 
-export function initAuthUI() {
+export function initAuthUI({ setCartOwner } = {}) {
   const dialog = document.getElementById('accountDialog');
   const guestPanel = document.getElementById('accountGuestPanel');
   const signedInPanel = document.getElementById('accountSignedInPanel');
@@ -69,12 +69,22 @@ export function initAuthUI() {
   (async () => {
     try {
       const auth = await import('../../services/firebase/auth.js');
-      auth.observeAuthState((user) => {
+      auth.observeAuthState(async (user) => {
         const signedIn = Boolean(user);
         currentUid = signedIn ? user.uid : null;
         guestPanel.hidden = signedIn;
         signedInPanel.hidden = !signedIn;
         document.getElementById('accountCloseAction').textContent = signedIn ? 'Close' : 'Continue as guest';
+        try {
+          const ownerResult = await setCartOwner?.(user?.uid || null);
+          if (ownerResult?.cleared) {
+            showMessage(signedIn
+              ? 'Your previous cart was cleared because the account changed on this device.'
+              : 'Your cart was cleared after signing out.');
+          }
+        } catch (error) {
+          showMessage('For privacy, your local cart could not be synchronized with this account. Please reload before continuing.', true);
+        }
         if (signedIn) {
           document.getElementById('accountDisplayName').textContent = user.displayName || 'QuickBite customer';
           document.getElementById('accountEmail').textContent = user.email || '';
