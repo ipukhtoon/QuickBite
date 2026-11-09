@@ -159,7 +159,7 @@
 
 ## Phase 5 — Automated Firestore security rules tests
 
-**Status: TEST SUITE AND CI STEP ADDED; EXECUTION RESULT PENDING**
+**Status: TEST SUITE AND CI STEP ADDED; DEPENDENCY FIX APPLIED; CI RETEST PENDING**
 
 ### Changes
 - Added `@firebase/rules-unit-testing` and Firebase CLI development dependencies.
@@ -173,7 +173,8 @@
 - `.github/workflows/build.yml`
 
 ### Verification and limitations
-- GitHub Actions runs have started for the new security test workflow; the final result must be inspected before recording a pass.
+- Initial CI attempts failed during dependency installation because rules-unit-testing 4.0.1 required Firebase 11 while the application uses Firebase 12. The test library was upgraded to 5.0.2 to match Firebase 12; the new CI run is pending.
+- Do not record the security suite as passed until the emulator tests themselves complete successfully.
 - Tests are written against the Firebase Emulator Suite and synthetic test records only.
 - No production Firebase project, production data or deployed rules are involved.
 - Storage rules are not yet covered by automated emulator tests.
