@@ -162,3 +162,46 @@ The product details dialog, keyboard selection, cart variant controls and Indexe
 - **Evidence:** VERIFIED BY SOURCE (GitHub Actions run #35)
 - **Finding:** The Vite production build passed after the product customization and option-aware cart modules were added.
 - **Limit:** No browser-level tests were run. Build success does not prove dialog behavior, form validation, IndexedDB persistence or responsive layout.
+
+
+## Follow-up inspection — Firebase/security foundation
+
+### GF-S5-016 — Public settings document is an all-fields public read
+- **Severity:** High
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Rules allow public reads of the complete `settings/public` document. Firestore Rules do not provide field-level redaction.
+- **Recommendation:** Store only public storefront data in this document. Keep private settings, staff data and credentials in non-public documents or a secret manager. Add a schema test that rejects private keys.
+
+### GF-S5-017 — Catalogue access is active-record gated
+- **Severity:** Medium (positive control; verification pending)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Public category/product reads require `active == true`; repository queries include that constraint and order by `sortOrder`. Client writes are denied.
+- **Recommendation:** Verify query behavior and inactive-document denial in the Firestore Emulator Suite.
+
+### GF-S5-018 — Customer and order ownership rules
+- **Severity:** High until emulator-tested
+- **Evidence:** VERIFIED BY SOURCE; runtime NOT TESTABLE
+- **Finding:** Customer documents are owner/admin-readable; orders are owner-readable by `customerUid` and readable by active staff/admin; client order writes are denied. Guest order retrieval is not exposed through Firestore.
+- **Recommendation:** Add emulator tests for cross-user denial, staff-role revocation, list query constraints, guest denial and order event access before any deployment.
+
+### GF-S5-019 — Staff/admin authorization depends on staff documents
+- **Severity:** High until emulator-tested
+- **Evidence:** VERIFIED BY SOURCE; runtime NOT TESTABLE
+- **Finding:** Staff access depends on an active staff document and role. Client writes to staff documents are denied.
+- **Recommendation:** Trusted functions must independently authorize every privileged action; Admin SDK bypasses Firestore Rules. Test inactive staff, role changes and unauthorized direct requests.
+
+### GF-S5-020 — Storage upload policy is closed by default
+- **Severity:** Low (positive control; verification pending)
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Menu media is publicly readable and client writes are denied; all other storage paths are denied.
+- **Recommendation:** Add emulator tests for public menu reads and denied upload/read of private paths.
+
+### GF-S5-021 — Security rules are not emulator-verified
+- **Severity:** High
+- **Evidence:** NOT TESTABLE in current session
+- **Finding:** Rules and emulator configuration are present, but no rules-unit tests or emulator execution evidence exists.
+- **Recommendation:** Before connecting a real Firebase project or enabling any account/order UI, add automated Firestore and Storage rules tests and execute them in CI.
+
+### Goldfish verdict
+
+The security baseline follows a sensible default-deny/trusted-write direction, but it is **not production-approved** until emulator tests prove ownership, staff authorization, public-data boundaries and denial cases. Goldfish has not modified the rules or any Firebase data.
