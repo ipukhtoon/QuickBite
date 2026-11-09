@@ -66,6 +66,7 @@
                     <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300" alt="Burger">
                     <div class="food-title">Cheeseburger Deluxe</div>
                     <div class="food-desc">Juicy beef patty & cheese</div>
+                    <button class="customize-btn" type="button" data-view-product>Customize</button>
                     <div class="food-footer">
                         <span class="food-price">Demo 8.99</span>
                         <button class="add-btn" type="button" data-add-to-cart aria-label="Add item to preview cart"><i class="fa-solid fa-plus"></i></button>
@@ -77,6 +78,7 @@
                     <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300" alt="Pizza">
                     <div class="food-title">Pepperoni Feast</div>
                     <div class="food-desc">Extra cheese & crust</div>
+                    <button class="customize-btn" type="button" data-view-product>Customize</button>
                     <div class="food-footer">
                         <span class="food-price">Demo 12.49</span>
                         <button class="add-btn" type="button" data-add-to-cart aria-label="Add item to preview cart"><i class="fa-solid fa-plus"></i></button>
@@ -88,6 +90,7 @@
                     <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=300" alt="Sushi">
                     <div class="food-title">Salmon Roll Sushi</div>
                     <div class="food-desc">Fresh salmon & avocado</div>
+                    <button class="customize-btn" type="button" data-view-product>Customize</button>
                     <div class="food-footer">
                         <span class="food-price">Demo 14.00</span>
                         <button class="add-btn" type="button" data-add-to-cart aria-label="Add item to preview cart"><i class="fa-solid fa-plus"></i></button>
@@ -99,6 +102,7 @@
                     <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=300" alt="Tacos">
                     <div class="food-title">Crispy Chicken Taco</div>
                     <div class="food-desc">Spicy sauce & lime</div>
+                    <button class="customize-btn" type="button" data-view-product>Customize</button>
                     <div class="food-footer">
                         <span class="food-price">Demo 7.50</span>
                         <button class="add-btn" type="button" data-add-to-cart aria-label="Add item to preview cart"><i class="fa-solid fa-plus"></i></button>
@@ -129,6 +133,17 @@
             </a>
         </div>
     </div>
+
+    <dialog class="product-dialog" id="productDialog" aria-labelledby="productDialogTitle">
+        <form method="dialog" class="product-dialog-shell" id="productForm">
+            <div class="product-dialog-header"><div><p class="eyebrow">CUSTOMIZE YOUR ITEM</p><h2 id="productDialogTitle">Product details</h2></div><button class="icon-button" type="submit" aria-label="Close product details"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+            <img class="product-dialog-image" id="productDialogImage" alt="" />
+            <p class="product-dialog-description" id="productDialogDescription"></p>
+            <div id="productOptionGroups" class="product-option-groups"></div>
+            <p id="productValidation" class="product-validation" role="alert" hidden></p>
+            <div class="product-dialog-footer"><div><span>Preview price</span><strong id="productDialogPrice">0.00 demo units</strong></div><button class="primary-button" type="button" id="addConfiguredProduct">Add to cart</button></div>
+        </form>
+    </dialog>
 
     <dialog class="cart-dialog" id="cartDialog" aria-labelledby="cartTitle">
         <div class="cart-dialog-header"><div><p class="eyebrow">YOUR SELECTION</p><h2 id="cartTitle">Preview cart</h2></div><button class="icon-button" type="button" data-close-cart aria-label="Close cart"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
