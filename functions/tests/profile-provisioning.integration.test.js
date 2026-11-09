@@ -63,7 +63,9 @@ before(async () => {
     },
   );
   assert.equal(update.ok, true, 'Auth Emulator should update the synthetic user display name.');
-  idToken = (await update.json()).idToken;
+  const updatedUser = await update.json();
+  assert.ok(typeof updatedUser.idToken === 'string' && updatedUser.idToken.length > 0, 'Auth Emulator should return a refreshed ID token.');
+  idToken = updatedUser.idToken;
 });
 
 after(async () => {
