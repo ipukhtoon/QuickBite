@@ -42,29 +42,44 @@ async function fetchOptionGroups(db, groupIds = []) {
     const groupSnapshot = await getDoc(doc(db, 'optionGroups', groupId));
     if (!groupSnapshot.exists()) return null;
     const group = groupSnapshot.data();
-    if (group.active !== true) return null;
+    if (group.active !== true) return { valid: false };
+    if (!['single', 'multiple'].includes(group.selectionType)) return { valid: false };
     const optionsSnapshot = await getDocs(query(
       collection(db, 'optionGroups', groupId, 'options'),
       where('active', '==', true),
       orderBy('sortOrder', 'asc'),
     ));
-    return {
-      id: groupSnapshot.id,
-      name: group.name,
-      type: group.selectionType,
-      required: group.required === true,
-      min: Number.isInteger(group.minSelections) ? group.minSelections : (group.required ? 1 : 0),
-      max: Number.isInteger(group.maxSelections) ? group.maxSelections : 1,
-      choices: optionsSnapshot.docs.map((optionSnapshot) => {
+    const choices = optionsSnapshot.docs.map((optionSnapshot) => {
         const option = optionSnapshot.data();
         return {
           id: optionSnapshot.id,
           label: option.name,
           deltaMinor: Number.isInteger(option.priceDeltaMinor) ? option.priceDeltaMinor : 0,
         };
-      }),
+      });
+    const required = group.required === true;
+    const min = Number.isInteger(group.minSelections) ? group.minSelections : (required ? 1 : 0);
+    const max = Number.isInteger(group.maxSelections) ? group.maxSelections : (group.selectionType === 'single' ? 1 : choices.length);
+    if (min < 0 || max < min || max > choices.length || (group.selectionType === 'single' && max > 1)) {
+      return { valid: false };
+    }
+    if (choices.length === 0 && min > 0) return { valid: false };
+    return {
+      valid: true,
+      group: {
+        id: groupSnapshot.id,
+        name: group.name,
+        type: group.selectionType,
+        required,
+        min,
+        max,
+        choices,
+      },
     };
-  })).then((groups) => groups.filter((group) => group && group.choices.length > 0));
+  })).then((results) => ({
+    valid: results.every((result) => result && result.valid),
+    groups: results.filter((result) => result && result.valid).map((result) => result.group),
+  }));
 }
 
 export async function fetchActiveProducts({ categoryId } = {}) {
@@ -75,15 +90,17 @@ export async function fetchActiveProducts({ categoryId } = {}) {
   const result = await getDocs(query(collection(db, 'products'), ...constraints));
   return Promise.all(result.docs.map(async (snapshot) => {
     const product = snapshot.data();
+    const optionResult = await fetchOptionGroups(db, product.optionGroupIds || []);
+    const validPrice = Number.isInteger(product.priceMinor) && product.priceMinor >= 0;
     return {
       id: snapshot.id,
-      name: product.name,
+      name: typeof product.name === 'string' ? product.name : '',
       description: product.description || '',
       categoryId: product.categoryId,
       imageUrl: product.imageUrl || '',
       priceMinor: product.priceMinor,
-      available: product.available !== false,
-      optionGroups: await fetchOptionGroups(db, product.optionGroupIds || []),
+      available: product.available !== false && validPrice && optionResult.valid,
+      optionGroups: optionResult.groups,
     };
   }));
 }
