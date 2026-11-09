@@ -121,6 +121,42 @@
 - No browser interaction, visual or Android device testing is claimed.
 - All option data and prices remain demonstration content. The backend must later validate option IDs, availability and prices authoritatively.
 
+## Phase 4 — Firebase client, data access and security baseline
+
+**Status: IMPLEMENTED IN REPOSITORY; VITE BUILD PASSED; EMULATOR SECURITY TESTS NOT YET RUN**
+
+### Changes
+- Added Firebase JavaScript SDK dependency.
+- Added `.env.example` with blank Firebase client configuration placeholders; no credentials or project ID were added.
+- Added guarded Firebase app/Auth/Firestore/Storage initialization. The app returns an unconfigured state instead of initializing with fabricated values.
+- Added customer authentication service functions for registration, sign-in, sign-out, password reset and auth-state observation.
+- Added Firestore active category/product read repository functions.
+- Added initial Firestore rules: public active catalogue reads, owner-scoped customer/saved-item reads, owner/staff order reads, and default-deny/trusted-write-only policies for orders, staff, catalogue and settings.
+- Added read-only public menu media Storage policy and denied direct client uploads.
+- Added Firestore indexes for active catalogue and category-filtered product queries.
+- Added Firebase Emulator configuration without selecting or provisioning a production project.
+- Added `docs/architecture/FIRESTORE_DATA_MODEL.md` documenting collections, query contracts and trust boundaries.
+
+### Files
+- `package.json`
+- `.env.example`
+- `firebase.json`
+- `firestore.rules`
+- `firestore.indexes.json`
+- `storage.rules`
+- `src/services/firebase/client.js`
+- `src/services/firebase/auth.js`
+- `src/services/catalogue/catalogue-repository.js`
+- `docs/architecture/FIRESTORE_DATA_MODEL.md`
+
+### Verification and limitations
+- GitHub Actions run #53 passed dependency installation and `npm run build` after Firebase SDK/client modules and security configuration were added.
+- Source inspection confirms client configuration requires all Firebase config values and no project credentials are committed.
+- Firestore/Storage rules have **not** been deployed or tested in the Firebase Emulator Suite. Treat them as an initial security baseline, not a production security certification.
+- No Firebase project was provisioned, no production data accessed, and no rules deployed.
+- Authentication UI, catalogue-to-Firestore integration, Cloud Functions, order creation and guest order retrieval remain outstanding.
+- Public `settings/public` must contain public-safe fields only because Firestore rules cannot redact fields inside a readable document.
+
 ## Remaining implementation phases
 
 1. Extract and formalize the design system; modularize the customer UI while matching the reference.
