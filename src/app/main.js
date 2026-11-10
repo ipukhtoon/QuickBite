@@ -2,12 +2,14 @@ import { initCatalogue } from '../features/catalogue/catalogue.js';
 import { initCart } from '../features/cart/cart-ui.js';
 import { initProductDetails } from '../features/product/product-details.js';
 import { initAuthUI } from '../features/auth/auth-ui.js';
+import { initOrdersUI } from '../features/orders/orders-ui.js';
 
 async function bootstrap() {
   const cart = await initCart();
   initCatalogue();
   initProductDetails({ onAdd: (product) => cart.add(product) });
   initAuthUI({ setCartOwner: cart.setOwner });
+  initOrdersUI();
 }
 
 bootstrap().catch((error) => {
@@ -26,7 +28,7 @@ document.querySelectorAll('[data-nav]').forEach((item) => {
     if (destination === 'home') return;
     event.preventDefault();
     if (destination === 'orders') {
-      window.dispatchEvent(new CustomEvent('quickbite:notice', { detail: 'Order history will appear here after customer accounts and order processing are implemented. Your cart is available from the Cart button above.' }));
+      window.dispatchEvent(new CustomEvent('quickbite:open-orders'));
       return;
     }
     if (destination === 'profile') {
