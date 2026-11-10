@@ -38,7 +38,12 @@ export async function transitionOrderStatus({ db, actorUid, payload }) {
     if (!orderSnapshot.exists) fail('not-found', 'This order could not be found.');
     const order = orderSnapshot.data();
 
-    if (order.status === payload.toStatus) return { orderId: payload.orderId, replayed: true };
+    if (order.status === payload.toStatus) {
+      if (payload.toStatus === 'completed' && order.paymentStatus !== 'paid') {
+        fail('failed-precondition', 'The completed order has an inconsistent payment state.');
+      }
+      return { orderId: payload.orderId, replayed: true };
+    }
     const allowed = TRANSITIONS[order.status] || [];
     if (!allowed.includes(payload.toStatus)) {
       fail('failed-precondition', 'This order cannot move to the selected status.');
