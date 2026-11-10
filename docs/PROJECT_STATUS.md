@@ -37,11 +37,11 @@
 - No Firebase project has been provisioned or connected; live catalogue integration has not been tested against real Firebase data.
 
 ## Outstanding functionality
-- Firestore customer-profile provisioning and controlled profile updates; customer authentication UI is implemented but still needs Auth Emulator/browser verification.
-- Guest order creation and secure guest credential lifecycle/retrieval remain outstanding. The authenticated trusted order callable is implemented and emulator/unit tested.
-- COD/COP checkout, order confirmation, order history and tracking.
-- Staff order queue and cash collection UI; trusted status transitions and cash-state enforcement are implemented and tested.
-- Admin menu, category, option, restaurant settings and staff management.
+- Customer authentication and trusted profile provisioning pass Firebase Auth/Functions/Firestore Emulator tests; profile editing and real-browser/production Firebase verification remain outstanding.
+- Guest order creation and secure guest credential lifecycle/retrieval remain outstanding. The authenticated trusted order callable is implemented and unit tested; its callable auth and fail-closed behavior are emulator-tested.
+- Customer checkout UI, order confirmation, order history and tracking.
+- Staff order queue and cash collection UI; trusted status transitions and cash-state enforcement are implemented and unit-tested.
+- Admin menu, category, option, restaurant settings and staff membership management UI; staff order transition backend is implemented.
 - Offline/recovery behavior, accessibility and real Android verification.
 - Production security review and deployment.
 
