@@ -20,7 +20,12 @@ function createFakeDb({ settings, products = {}, categories = {}, groups = {}, o
             id: id || 'generated-order-id',
             path,
             collection(child) {
-              return { doc: () => ({ id: 'event-id', path: `${path}/${child}/event-id` }) };
+              return {
+                doc: (childId = 'generated-event-id') => ({
+                  id: childId,
+                  path: `${path}/${child}/${childId}`,
+                }),
+              };
             },
           };
         },
