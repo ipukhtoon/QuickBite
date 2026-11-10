@@ -80,7 +80,7 @@ function normalizeRequest(payload) {
     fail('invalid-argument', 'Choose the cash payment method that matches your fulfilment method.');
   }
   if (!customer || !validText(customer.name, 80) || !validText(customer.phone, 32)
-    || customer.phone.replace(/\\D/g, '').length < 7 || customer.phone.replace(/\\D/g, '').length > 15) {
+    || customer.phone.replace(/\D/g, '').length < 7 || customer.phone.replace(/\D/g, '').length > 15) {
     fail('invalid-argument', 'Enter your name and a valid contact phone number.');
   }
   if (notes != null && (typeof notes !== 'string' || notes.length > MAX_NOTE_LENGTH)) {
@@ -183,10 +183,12 @@ async function buildItemSnapshot(transaction, db, item) {
       fail('failed-precondition', 'A product option is no longer available.');
     }
     const optionIds = selectionsByGroup.get(groupId);
-    const min = Number.isInteger(group.minSelections) ? group.minSelections : (group.required ? 1 : 0);
-    const max = Number.isInteger(group.maxSelections) ? group.maxSelections : (group.selectionType === 'single' ? 1 : 99);
-    if (max > MAX_OPTIONS_PER_GROUP || optionIds.length < min || optionIds.length > max
-      || (group.selectionType === 'single' && optionIds.length > 1)) {
+    const min = group.minSelections == null ? (group.required ? 1 : 0) : group.minSelections;
+    const max = group.maxSelections == null ? (group.selectionType === 'single' ? 1 : MAX_OPTIONS_PER_GROUP) : group.maxSelections;
+    if (!Number.isInteger(min) || !Number.isInteger(max) || min < 0
+      || (group.required && min < 1) || max < min || max > MAX_OPTIONS_PER_GROUP
+      || (group.selectionType === 'single' && max > 1)
+      || optionIds.length < min || optionIds.length > max) {
       fail('invalid-argument', 'Choose the required product options before continuing.');
     }
     const selected = [];
