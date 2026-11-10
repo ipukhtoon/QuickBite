@@ -218,7 +218,7 @@
 
 ## Phase 8 — Trusted authenticated order creation
 
-**Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS RUN #158 PASSED FOR THE INITIAL ORDER-SERVICE REVISION; LATEST HARDENING REVISION CI PENDING**
+**Status: IMPLEMENTED IN REPOSITORY; LATEST SOURCE AND TEST SUITE VERIFIED IN GITHUB ACTIONS RUN #183**
 
 ### Changes
 - Added a callable Cloud Function `createOrder` requiring a Firebase-authenticated customer.
@@ -238,9 +238,10 @@
 - `functions/package.json`
 
 ### Verification and limitations
-- GitHub Actions run #158 passed Cloud Functions syntax checks, six profile/authentication integration tests (including trusted profile creation, idempotent profile retry, unauthenticated profile denial, unauthenticated order denial and fail-closed order setup), six order-service unit tests, five IndexedDB cart tests, the Vite production build and all 11 Firestore/Storage security tests.
+- GitHub Actions run #158 passed the initial order-service revision.
+- The later complete source/test revision was verified by run #183, which passed all 23 Cloud Functions tests (including order service, staff workflow and callable authorization), five IndexedDB cart tests, the Vite production build and all 11 Firestore/Storage security tests.
 - The order-service unit tests use a deterministic fake Firestore transaction adapter; the callable is also loaded/exercised through Firebase Auth/Functions/Firestore emulators for unauthenticated and unconfigured-ordering cases.
-- The latest hardening revision adds transaction-read bounds and will be verified by its own GitHub Actions run.
+- The latest hardening revision adds transaction-read bounds, contact/option validation and is included in successful run #183.
 - No production Firebase project is configured, no rules/functions have been deployed, and no real customer data was used.
 - No browser checkout, real Firebase project, visual or Android interaction test is claimed.
 - Restaurant settings must explicitly configure `orderingEnabled`, currency, fulfilment methods, delivery fee/areas and `taxEnabled`; when tax is enabled, rate and tax behavior fields must also be complete. Missing settings fail closed.
