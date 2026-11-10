@@ -95,3 +95,11 @@ test('authenticated user gets a trusted customer profile and repeat calls preser
   assert.equal(second.get('createdAt').toMillis(), createdAt.toMillis());
   assert.equal(second.get('displayName'), 'QuickBite Test Customer');
 });
+
+test('trusted order callable rejects unauthenticated requests', async () => {
+  const createOrder = httpsCallable(functions, 'createOrder');
+  await assert.rejects(
+    createOrder({}),
+    (error) => error?.code === 'functions/unauthenticated',
+  );
+});
