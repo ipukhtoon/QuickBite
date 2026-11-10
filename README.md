@@ -15,8 +15,9 @@ A mobile-first, single-restaurant food-ordering application. QuickBite is not a 
 - IndexedDB-backed local cart preview with option-specific lines and serialized quantity updates.
 - Customer account interface for sign-in, registration, sign-out and password reset (requires Firebase configuration).
 - Trusted authenticated order creation callable with server-side catalogue/option/price validation, COD/COP, immutable order snapshots and idempotent retries.
+- Role-checked staff order transition callable with audit events and cash collection confirmation before completion.
 - Firebase client/Auth services, Firestore catalogue repository, initial Firestore/Storage rules and indexes.
-- GitHub Actions production build, 11 Firestore/Storage Emulator security tests, six profile/auth callable tests, six order-service unit tests and five cart tests currently pass.
+- GitHub Actions production build, 11 Firestore/Storage Emulator security tests, 23 Cloud Functions tests and 5 cart tests currently pass.
 
 ## Important limitations
 
