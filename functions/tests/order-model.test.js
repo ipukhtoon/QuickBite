@@ -154,3 +154,37 @@ test('missing tax policy fails closed rather than silently applying zero tax', a
     (error) => error.code === 'failed-precondition',
   );
 });
+
+test('client-submitted price fields cannot reduce the authoritative total', async () => {
+  const { db, writes } = createFakeDb(fakeData());
+  const result = await createCustomerOrder({
+    db,
+    uid: 'customer-1',
+    authUser: {},
+    payload: payload({
+      items: [{ productId: 'burger-1', quantity: 1, priceMinor: 1, unitPriceMinor: 1, selections: [{ groupId: 'size', optionIds: ['regular'] }] }],
+    }),
+  });
+  assert.equal(writes.get(`orders/${result.orderId}`).totals.subtotalMinor, 1000);
+});
+
+test('malformed option-group configuration and invalid contact numbers fail closed', async () => {
+  const malformedGroup = createFakeDb({
+    ...fakeData(),
+    groups: { size: { ...group, required: 'false' } },
+  });
+  await assert.rejects(
+    createCustomerOrder({ db: malformedGroup.db, uid: 'customer-1', authUser: {}, payload: payload() }),
+    (error) => error.code === 'failed-precondition',
+  );
+
+  await assert.rejects(
+    createCustomerOrder({
+      db: createFakeDb(fakeData()).db,
+      uid: 'customer-1',
+      authUser: {},
+      payload: payload({ customer: { name: 'Test Customer', phone: '123' } }),
+    }),
+    (error) => error.code === 'invalid-argument',
+  );
+});
