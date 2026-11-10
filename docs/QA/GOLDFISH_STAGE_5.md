@@ -420,3 +420,30 @@ The trusted order callable is a substantial backend foundation and correctly rej
 - GitHub Actions run #183 passed 23 Cloud Functions tests, 5 IndexedDB cart tests, Vite production build and 11 Firestore/Storage Emulator tests.
 - The staff transition logic tests use a deterministic transaction adapter; the Firebase Emulator integration confirms customer denial but does not yet exercise a seeded active staff account through a successful real Firestore transaction.
 - The CI build still reports a 709.86 kB minified Firebase client chunk (175.85 kB gzip); performance optimization remains recommended.
+
+
+## Independent inspection — customer order history interface
+
+### GF-S5-045 — Order history query is scoped to the signed-in customer
+- **Severity:** Positive control
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** The repository query filters `customerUid` by the Firebase Auth current user's UID, orders newest first and applies a bounded result limit. Firestore rules independently restrict order reads to the owner or active staff.
+- **Recommendation:** Preserve both query scoping and server-side rules. Add emulator integration tests that seed two customers' orders and verify each repository result contains only the current user's records.
+
+### GF-S5-046 — Order history has distinct loading, empty, sign-in and error states
+- **Severity:** Positive control; interaction testing outstanding
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** The Orders navigation opens a dedicated dialog, not the cart. The dialog includes loading, empty, unconfigured, signed-out, refresh and error feedback.
+- **Recommendation:** Browser-test the dialog with slow network, signed-out and signed-in states, no orders, multiple orders, malformed optional fields and refresh retries.
+
+### GF-S5-047 — Order history is a summary, not full tracking
+- **Severity:** Medium
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Cards show order number, date, status, item quantities, line totals, cash payment state and total. There is no detailed order route, event timeline, live updates or pagination.
+- **Recommendation:** Add a dedicated order detail view with status timeline and refresh/poll strategy after customer confirmation/checkout are implemented. Keep guest access disabled until secure credentials are designed.
+
+### GF-S5-048 — Latest order-history UI has not been runtime verified
+- **Severity:** Medium
+- **Evidence:** NOT TESTABLE
+- **Finding:** Source was inspected, but no browser environment or Firebase project with seeded orders is connected. GitHub Actions run #200 was pending when inspected.
+- **Recommendation:** Verify build, query/index behavior and customer isolation in emulators; then conduct browser and Android interaction tests when available.
