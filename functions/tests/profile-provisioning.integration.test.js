@@ -63,6 +63,14 @@ test('customer profile callable requires an authenticated Firebase user', async 
   );
 });
 
+test('trusted order callable rejects unauthenticated requests', async () => {
+  const createOrder = httpsCallable(functions, 'createOrder');
+  await assert.rejects(
+    createOrder({}),
+    (error) => error?.code === 'functions/unauthenticated',
+  );
+});
+
 test('authenticated user gets a trusted customer profile and repeat calls preserve existing fields', async () => {
   const email = `quickbite-test-${Date.now()}@example.test`;
   const credential = await createUserWithEmailAndPassword(
@@ -94,14 +102,6 @@ test('authenticated user gets a trusted customer profile and repeat calls preser
   assert.equal(second.get('phone'), '+10000000000');
   assert.equal(second.get('createdAt').toMillis(), createdAt.toMillis());
   assert.equal(second.get('displayName'), 'QuickBite Test Customer');
-});
-
-test('trusted order callable rejects unauthenticated requests', async () => {
-  const createOrder = httpsCallable(functions, 'createOrder');
-  await assert.rejects(
-    createOrder({}),
-    (error) => error?.code === 'functions/unauthenticated',
-  );
 });
 
 test('authenticated order callable fails closed until restaurant ordering is configured', async () => {
