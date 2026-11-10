@@ -216,6 +216,37 @@
 - No browser interaction, visual screenshot or Android device testing is claimed.
 - Cart prices remain local display snapshots. A previously saved cart line is not authoritatively re-priced until it is reselected/re-added; trusted checkout must always revalidate current product/option prices and availability on the server. Checkout remains disabled.
 
+## Phase 8 — Trusted authenticated order creation
+
+**Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS RUN #158 PASSED FOR THE INITIAL ORDER-SERVICE REVISION; LATEST HARDENING REVISION CI PENDING**
+
+### Changes
+- Added a callable Cloud Function `createOrder` requiring a Firebase-authenticated customer.
+- Added a server-side order service that ignores client prices and reloads current restaurant settings, products, categories, option groups and selected options from Firestore.
+- Added validation for item count, quantities, option ownership/cardinality, product/category/option active state, fulfilment availability, delivery-area availability, COD/COP selection, customer contact details, notes and configured tax policy.
+- Calculates subtotal, delivery fee, tax and total using integer minor currency units and server-owned values.
+- Stores immutable item/option/price snapshots, a separate unpaid payment status, pending-confirmation order status and initial order event.
+- Adds a per-customer idempotency record with a canonical request fingerprint. Identical retries return the original order; reuse of a key with a different payload is rejected.
+- Bounds item/option request sizes to keep Firestore transaction reads within safe limits.
+- Guest order creation is deliberately not enabled yet. Guest credential expiry, retrieval, recovery and account claiming remain unresolved and must be designed before guest order access is released.
+
+### Files
+- `functions/src/index.js`
+- `functions/src/order-service.js`
+- `functions/tests/order-model.test.js`
+- `functions/tests/profile-provisioning.integration.test.js`
+- `functions/package.json`
+
+### Verification and limitations
+- GitHub Actions run #158 passed Cloud Functions syntax checks, six profile/authentication integration tests (including trusted profile creation, idempotent profile retry, unauthenticated profile denial, unauthenticated order denial and fail-closed order setup), six order-service unit tests, five IndexedDB cart tests, the Vite production build and all 11 Firestore/Storage security tests.
+- The order-service unit tests use a deterministic fake Firestore transaction adapter; the callable is also loaded/exercised through Firebase Auth/Functions/Firestore emulators for unauthenticated and unconfigured-ordering cases.
+- The latest hardening revision adds transaction-read bounds and will be verified by its own GitHub Actions run.
+- No production Firebase project is configured, no rules/functions have been deployed, and no real customer data was used.
+- No browser checkout, real Firebase project, visual or Android interaction test is claimed.
+- Restaurant settings must explicitly configure `orderingEnabled`, currency, fulfilment methods, delivery fee/areas and `taxEnabled`; when tax is enabled, rate and tax behavior fields must also be complete. Missing settings fail closed.
+- The callable currently supports authenticated customer orders only. Guest checkout remains outstanding.
+- Order status transitions, staff authorization/workflows, guest order retrieval and customer order-history UI remain outstanding.
+
 ## Phase 7 — Customer authentication interface
 
 **Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS RUN #123 PASSED**
@@ -249,12 +280,12 @@
 
 ## Remaining implementation phases
 
-1. Implement customer authentication screens and connect the existing Firebase Auth service functions.
-2. Add customer profile creation/update through trusted backend operations and validate privacy boundaries.
-3. Implement Cloud Functions for idempotent guest/customer order creation, server-side catalogue/option/price validation and safe guest order credentials.
-4. Implement COD/COP checkout, order confirmation, customer order history and tracking.
-5. Implement staff order queue, role-checked status transitions and cash collection workflow.
-6. Implement admin menu, category, option, restaurant settings and staff management.
+1. Complete guest identity, credential lifecycle, order retrieval, expiry, recovery and account-claiming design before implementing guest checkout.
+2. Build the customer checkout UI and connect it to trusted order creation with a fresh idempotency key per deliberate submission.
+3. Add trusted order status transition functions, role checks, audit events and cancellation/rejection policy.
+4. Build customer order confirmation, history and tracking.
+5. Build staff order queue and cash collection workflow.
+6. Build admin menu, category, option, restaurant settings and staff management.
 7. Complete accessibility, responsive Android testing, offline/recovery behavior and additional security tests.
 8. Run independent Goldfish review, fix defects, regression test and update verification evidence.
 
