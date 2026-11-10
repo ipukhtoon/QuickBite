@@ -278,6 +278,35 @@
 - Registration currently creates a Firebase Authentication user and updates the Auth display name. It does not yet create a Firestore `customers/{uid}` profile document; trusted customer-profile provisioning/update remains outstanding.
 - Email/password provider enablement and password-reset email delivery settings must be configured in the selected Firebase project before use.
 
+## Phase 9 — Staff order workflow and cash collection controls
+
+**Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS RUN #183 PASSED**
+
+### Changes
+- Added trusted `transitionOrder` callable for active staff/admin memberships only.
+- Implemented the approved happy-path lifecycle: pending_confirmation → accepted → preparing → ready_for_pickup (pickup) or out_for_delivery (delivery) → completed.
+- Rejects invalid transitions, inactive/non-staff callers and fulfilment-state mismatches.
+- Adds append-only order status events with actor UID, role, reason and server timestamp.
+- Cash remains unpaid until the staff member confirms collection at the fulfilment completion step; only then is paymentStatus set to paid.
+- Added retry handling for repeated target-state requests and checks for inconsistent completed/unpaid records.
+- Added customer order-history composite index for customerUid + createdAt descending.
+
+### Files
+- `functions/src/index.js`
+- `functions/src/order-workflow.js`
+- `functions/tests/order-workflow.test.js`
+- `functions/tests/profile-provisioning.integration.test.js`
+- `functions/package.json`
+- `firestore.indexes.json`
+
+### Verification and limitations
+- GitHub Actions run #183 passed all 23 Cloud Functions tests (including callable auth/authorization integration checks), all 5 IndexedDB cart tests, the Vite production build and all 11 Firestore/Storage Emulator security tests.
+- The workflow's detailed transition tests use a deterministic transaction adapter; the emulator integration test verifies that a normal customer cannot invoke the staff transition callable.
+- No successful order has yet been created against a fully seeded Firestore Emulator catalogue/settings fixture. Real transaction concurrency and staff transition integration tests remain outstanding.
+- No browser interaction, staff UI, Android device test or production Firebase test is claimed.
+- Rejection/cancellation states and the detailed cancellation policy remain unresolved and are not exposed as transitions.
+- Staff queue UI, cash collection screen and admin staff provisioning UI remain outstanding.
+
 ## Remaining implementation phases
 
 1. Complete guest identity, credential lifecycle, order retrieval, expiry, recovery and account-claiming design before implementing guest checkout.
