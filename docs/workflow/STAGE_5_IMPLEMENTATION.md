@@ -308,6 +308,36 @@
 - Rejection/cancellation states and the detailed cancellation policy remain unresolved and are not exposed as transitions.
 - Staff queue UI, cash collection screen and admin staff provisioning UI remain outstanding.
 
+## Phase 10 — Customer order history interface
+
+**Status: IMPLEMENTED IN REPOSITORY; GITHUB ACTIONS VERIFICATION PENDING**
+
+### Changes
+- Added a customer-owned Firestore order history repository query filtered by the signed-in UID, ordered by newest first and limited to 20 records (maximum 50).
+- Connected the Orders navigation item to a responsive order-history dialog.
+- Added loading, empty, signed-out, unconfigured, refresh and error states.
+- Added safe text rendering for order ID, date, status, item quantities, line totals, payment state and order total.
+- Added a sign-in action for customers who open Orders while signed out.
+- Added refresh request guarding to prevent overlapping refresh clicks.
+- Reused the approved design tokens, dialog patterns and mobile-responsive styling.
+
+### Files
+- `src/services/orders/order-repository.js`
+- `src/features/orders/orders-ui.js`
+- `src/app/main.js`
+- `index.html`
+- `src/styles/main.css`
+- `firestore.indexes.json`
+
+### Verification and limitations
+- Source inspection confirms the order query always includes `customerUid == currentUser.uid`, uses the approved customer order-history index and does not permit client writes.
+- The repository source, UI hooks and dialog markup have been inspected.
+- GitHub Actions run #200 was triggered for this source revision; its dependency-install/build/test status was still in progress at the time of this record.
+- No browser interaction, visual screenshot, seeded customer-order UI test or Android device test is claimed.
+- Order history displays the latest 20 orders and currently has no pagination or dedicated order-detail route.
+- It requires Firebase configuration and an authenticated customer. Guest order retrieval remains unavailable until the guest credential policy is resolved.
+- The current staff backend can update order status, but the customer history UI refreshes on open/manual refresh; realtime updates are not yet implemented.
+
 ## Remaining implementation phases
 
 1. Complete guest identity, credential lifecycle, order retrieval, expiry, recovery and account-claiming design before implementing guest checkout.
