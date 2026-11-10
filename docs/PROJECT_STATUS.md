@@ -22,6 +22,7 @@
 - Trusted authenticated order creation callable with server-side product/option/price validation, COD/COP, immutable order snapshots and idempotent retry protection.
 - Staff/admin order transition callable with role checks, audit events and cash collection confirmation at completion.
 - Customer order-history composite Firestore index.
+- Authenticated customer order-history dialog with customer-scoped query and loading/empty/error/signed-out states.
 - Firestore repository for public settings, active categories, active products and active product options.
 - Initial Firestore and Storage security rules, indexes and Emulator configuration.
 - Automated Firestore/Storage Emulator tests in GitHub Actions.
@@ -39,7 +40,7 @@
 ## Outstanding functionality
 - Customer authentication and trusted profile provisioning pass Firebase Auth/Functions/Firestore Emulator tests; profile editing and real-browser/production Firebase verification remain outstanding.
 - Guest order creation and secure guest credential lifecycle/retrieval remain outstanding. The authenticated trusted order callable is implemented and unit tested; its callable auth and fail-closed behavior are emulator-tested.
-- Customer checkout UI, order confirmation, order history and tracking.
+- Customer checkout UI, order confirmation, order detail/tracking and guest order history. Authenticated order history list UI is implemented; its latest CI run is pending.
 - Staff order queue and cash collection UI; trusted status transitions and cash-state enforcement are implemented and unit-tested.
 - Admin menu, category, option, restaurant settings and staff membership management UI; staff order transition backend is implemented.
 - Offline/recovery behavior, accessibility and real Android verification.
@@ -70,4 +71,4 @@ Restaurant identity, currency, tax, delivery zones/fees, operating hours, suppor
 - Material scope or architecture changes return to the user for approval.
 
 ## Next action
-Resolve guest credential expiry/recovery/account-claiming policy, then build customer checkout, confirmation/history UI and staff/admin screens. Record each phase and Goldfish evidence independently.
+Resolve guest credential expiry/recovery/account-claiming policy, then build customer checkout and confirmation UI, order detail/tracking and staff/admin screens. Record each phase and Goldfish evidence independently.
