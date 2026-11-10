@@ -43,6 +43,7 @@ function fakeDb({ staff, order }) {
 const baseOrder = {
   status: 'pending_confirmation',
   paymentStatus: 'unpaid',
+  paymentMethod: 'COD',
   fulfilmentType: 'delivery',
 };
 
@@ -118,4 +119,18 @@ test('same target status retry does not create duplicate transition', async () =
   });
   assert.equal(result.replayed, true);
   assert.equal(writes.length, 0);
+});
+
+test('delivery and pickup cannot use each other’s fulfilment states', async () => {
+  const pickup = fakeDb({
+    staff: { active: true, role: 'staff' },
+    order: { ...baseOrder, fulfilmentType: 'pickup', paymentMethod: 'COP', status: 'preparing' },
+  });
+  await assert.rejects(
+    transitionOrderStatus({
+      db: pickup.db, actorUid: 'staff-1',
+      payload: { orderId: 'order-id-1234567890', toStatus: 'out_for_delivery' },
+    }),
+    (error) => error.code === 'failed-precondition',
+  );
 });
