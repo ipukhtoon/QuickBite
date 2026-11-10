@@ -82,6 +82,20 @@ Each item snapshot stores product ID, name, selected option IDs/names, quantity,
 - Customer order history: `customerUid == request.auth.uid`, ordered by `createdAt` descending; add the composite index when this query is implemented.
 - Staff order queue: authorized staff query by allowed status and created time; exact index follows the final queue filters.
 
+
+## Order workflow contract
+
+Trusted callable functions:
+- `createOrder`: authenticated customer order creation only; guest ordering remains disabled until its credential lifecycle is approved and implemented.
+- `transitionOrder`: active staff/admin membership required; clients cannot write order status or events directly.
+- Order state path: `pending_confirmation → accepted → preparing → ready_for_pickup → completed` for pickup, or `pending_confirmation → accepted → preparing → out_for_delivery → completed` for delivery.
+- Each transition writes an append-only `orders/{orderId}/events/{eventId}` record with actor UID/role, previous/next state and server timestamp.
+- Cash order payment remains `unpaid` until a staff member confirms collection while completing fulfilment. Completion and payment state update occur in the same trusted transaction.
+- Rejection/cancellation policy and transitions are not enabled until restaurant policy is confirmed.
+
+Customer order history query:
+- `orders` where `customerUid == authenticated UID`, ordered by `createdAt` descending; composite index is defined in `firestore.indexes.json`.
+
 ## Trust boundaries
 
 1. Browser values are display hints, never trusted price or permission authority.
