@@ -100,6 +100,7 @@ export function initOrdersUI() {
     if (!isFirebaseConfigured()) {
       loading.hidden = true;
       setMessage('Order history will be available after the restaurant connects its Firebase account service.');
+      refreshButton.disabled = false;
       return;
     }
 
