@@ -388,3 +388,35 @@ Goldfish reviewed the actual source for `functions/src/order-service.js`, `funct
 ### Goldfish verdict
 
 The trusted order callable is a substantial backend foundation and correctly rejects guest access rather than implementing weak guest security. It is **not a complete ordering journey**. Guest checkout, customer checkout UI, successful full Firestore transaction integration tests, order history, staff/admin operations and Android/browser interaction testing remain outstanding. No production deployment or real data use was performed. Goldfish did not modify application source, Firebase records or production data.
+
+
+## Independent inspection — staff order workflow
+
+### GF-S5-041 — Staff role is checked by trusted workflow callable
+- **Severity:** Positive control
+- **Evidence:** VERIFIED BY SOURCE and automated tests
+- **Finding:** The callable checks the active staff membership document and allows only staff/admin roles. An authenticated customer is denied by the Firebase Emulator integration test.
+- **Recommendation:** Keep role assignment/revocation in trusted admin operations. Add real seeded staff membership integration tests before production.
+
+### GF-S5-042 — Order transitions are server-enforced and audited
+- **Severity:** Positive control with operational gaps
+- **Evidence:** VERIFIED BY SOURCE; unit tests
+- **Finding:** The happy-path status map enforces pickup/delivery-specific states and appends actor/timestamp events. Invalid transitions and fulfilment mismatches are rejected.
+- **Recommendation:** Add a complete Firestore Emulator integration test for each permitted transition and concurrency/replay cases. Define rejected/cancelled transitions only after the restaurant policy is supplied.
+
+### GF-S5-043 — Cash payment state is tied to fulfilment completion
+- **Severity:** Positive control
+- **Evidence:** VERIFIED BY SOURCE; unit tests
+- **Finding:** Order placement stores paymentStatus=unpaid. The trusted transition callable requires explicit staff cash-collection confirmation before marking an order completed and paid in the same transaction.
+- **Recommendation:** The future staff UI must require a clear confirmation action and provide a correction/escalation path for payment disputes without allowing arbitrary client writes.
+
+### GF-S5-044 — Staff and admin interfaces are not implemented
+- **Severity:** High before operations can use the system
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Backend transitions exist, but no staff queue, order detail, cash collection screen, admin staff membership provisioning or operator feedback UI exists.
+- **Recommendation:** Build the operations UI with clear status labels, queue filters, disabled invalid actions, loading/retry states and role-specific navigation.
+
+### Updated verification note
+- GitHub Actions run #183 passed 23 Cloud Functions tests, 5 IndexedDB cart tests, Vite production build and 11 Firestore/Storage Emulator tests.
+- The staff transition logic tests use a deterministic transaction adapter; the Firebase Emulator integration confirms customer denial but does not yet exercise a seeded active staff account through a successful real Firestore transaction.
+- The CI build still reports a 709.86 kB minified Firebase client chunk (175.85 kB gzip); performance optimization remains recommended.
