@@ -90,6 +90,7 @@ export function initOrdersUI() {
   }
 
   async function loadOrders() {
+    refreshButton.disabled = true;
     list.replaceChildren();
     empty.hidden = true;
     loading.hidden = false;
@@ -117,11 +118,13 @@ export function initOrdersUI() {
         return;
       }
       setMessage('Your orders could not be loaded. Check your connection and try again.', true);
+    } finally {
+      refreshButton.disabled = false;
     }
   }
 
   document.addEventListener('quickbite:open-orders', () => {
-    dialog.showModal();
+    if (!dialog.open) dialog.showModal();
     loadOrders();
   });
 
