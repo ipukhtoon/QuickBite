@@ -20,6 +20,8 @@
 - Product customization with required/optional option groups.
 - Firebase client and Auth service functions, plus customer sign-in/register/sign-out/password-reset interface.
 - Trusted authenticated order creation callable with server-side product/option/price validation, COD/COP, immutable order snapshots and idempotent retry protection.
+- Staff/admin order transition callable with role checks, audit events and cash collection confirmation at completion.
+- Customer order-history composite Firestore index.
 - Firestore repository for public settings, active categories, active products and active product options.
 - Initial Firestore and Storage security rules, indexes and Emulator configuration.
 - Automated Firestore/Storage Emulator tests in GitHub Actions.
@@ -28,7 +30,8 @@
 - GitHub Actions run #94 passed `npm install`, `npm run build` and all 11 Emulator security tests (8 Firestore, 3 Storage).
 - GitHub Actions run #102 passed dependency installation, the Vite production build and all Firestore/Storage Emulator tests for the catalogue/cart source revision.
 - GitHub Actions run #123 passed dependency installation, the Vite production build and all 11 Firestore/Storage Emulator tests for the authentication UI and lazy Firebase SDK loading changes.
-- GitHub Actions run #158 passed Cloud Functions syntax checks, six trusted profile/auth integration tests, six order-service unit tests, five cart tests, Vite production build and all 11 Firestore/Storage security tests.
+- GitHub Actions run #158 passed the initial trusted order service revision.
+- GitHub Actions run #183 passed all 23 Cloud Functions tests, all 5 cart tests, Vite production build and all 11 Firestore/Storage Emulator security tests for the current order creation and staff workflow revision.
 - Source inspection has been performed on the current modules.
 - No browser interaction, visual screenshot or Android device test is claimed.
 - No Firebase project has been provisioned or connected; live catalogue integration has not been tested against real Firebase data.
@@ -37,7 +40,7 @@
 - Firestore customer-profile provisioning and controlled profile updates; customer authentication UI is implemented but still needs Auth Emulator/browser verification.
 - Guest order creation and secure guest credential lifecycle/retrieval remain outstanding. The authenticated trusted order callable is implemented and emulator/unit tested.
 - COD/COP checkout, order confirmation, order history and tracking.
-- Staff order queue, cash collection and authorized status transitions.
+- Staff order queue and cash collection UI; trusted status transitions and cash-state enforcement are implemented and tested.
 - Admin menu, category, option, restaurant settings and staff management.
 - Offline/recovery behavior, accessibility and real Android verification.
 - Production security review and deployment.
@@ -67,4 +70,4 @@ Restaurant identity, currency, tax, delivery zones/fees, operating hours, suppor
 - Material scope or architecture changes return to the user for approval.
 
 ## Next action
-Design and implement guest credential lifecycle/retrieval before guest checkout; then build the customer checkout UI and trusted order lifecycle. Record each phase and Goldfish evidence independently.
+Resolve guest credential expiry/recovery/account-claiming policy, then build customer checkout, confirmation/history UI and staff/admin screens. Record each phase and Goldfish evidence independently.
