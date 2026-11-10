@@ -197,6 +197,27 @@
         <div class="account-dialog-footer"><button class="secondary-button" type="button" id="accountCloseAction" data-close-account>Continue as guest</button></div>
     </dialog>
 
+
+    <dialog class="orders-dialog" id="ordersDialog" aria-labelledby="ordersTitle">
+        <div class="cart-dialog-header">
+            <div><p class="eyebrow">YOUR QUICKBITE ACCOUNT</p><h2 id="ordersTitle">Your orders</h2></div>
+            <button class="icon-button" type="button" data-close-orders aria-label="Close orders"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <p id="ordersMessage" class="orders-message" role="status" aria-live="polite" hidden></p>
+        <p id="ordersLoading" class="orders-loading" role="status">Loading your orders…</p>
+        <div id="ordersList" class="orders-list"></div>
+        <div id="ordersEmpty" class="cart-empty" hidden>
+            <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+            <p>No orders yet</p>
+            <span>Your confirmed orders will appear here.</span>
+        </div>
+        <button class="primary-button orders-signin" type="button" id="ordersSignIn" hidden>Sign in</button>
+        <div class="orders-dialog-footer">
+            <button class="secondary-button" type="button" id="refreshOrders">Refresh orders</button>
+            <button class="secondary-button" type="button" data-close-orders>Close</button>
+        </div>
+    </dialog>
+
     <!-- JavaScript Interactivity -->
     <script type="module" src="/src/app/main.js"></script>
 </body>
