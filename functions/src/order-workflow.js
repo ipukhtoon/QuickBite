@@ -37,6 +37,12 @@ export async function transitionOrderStatus({ db, actorUid, payload }) {
     const orderSnapshot = await transaction.get(orderRef);
     if (!orderSnapshot.exists) fail('not-found', 'This order could not be found.');
     const order = orderSnapshot.data();
+    if (!['delivery', 'pickup'].includes(order.fulfilmentType)
+      || !['COD', 'COP'].includes(order.paymentMethod)
+      || (order.fulfilmentType === 'delivery' && order.paymentMethod !== 'COD')
+      || (order.fulfilmentType === 'pickup' && order.paymentMethod !== 'COP')) {
+      fail('failed-precondition', 'This order has an invalid fulfilment or payment configuration.');
+    }
 
     if (order.status === payload.toStatus) {
       if (payload.toStatus === 'completed' && order.paymentStatus !== 'paid') {
