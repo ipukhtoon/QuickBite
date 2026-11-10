@@ -14,8 +14,9 @@ A mobile-first, single-restaurant food-ordering application. QuickBite is not a 
 - Product customization with required/optional options and configured currency formatting.
 - IndexedDB-backed local cart preview with option-specific lines and serialized quantity updates.
 - Customer account interface for sign-in, registration, sign-out and password reset (requires Firebase configuration).
+- Trusted authenticated order creation callable with server-side catalogue/option/price validation, COD/COP, immutable order snapshots and idempotent retries.
 - Firebase client/Auth services, Firestore catalogue repository, initial Firestore/Storage rules and indexes.
-- GitHub Actions production build plus Firestore/Storage Emulator security tests (11 tests currently passing).
+- GitHub Actions production build, 11 Firestore/Storage Emulator security tests, six profile/auth callable tests, six order-service unit tests and five cart tests currently pass.
 
 ## Important limitations
 
@@ -23,8 +24,9 @@ A mobile-first, single-restaurant food-ordering application. QuickBite is not a 
 - Live catalogue integration has not been tested against a real Firebase project.
 - Checkout is deliberately disabled.
 - No Firebase project has been provisioned or connected.
-- Authentication UI is implemented but has not been tested against Firebase Auth; Firestore customer-profile provisioning remains outstanding.
-- Trusted Cloud Functions, order creation, guest order retrieval, order history, saved items, full profile management, admin and staff workflows remain incomplete.
+- Customer authentication and trusted profile provisioning are implemented and tested with Firebase emulators; production Firebase setup remains unconfigured.
+- Authenticated order creation is implemented and emulator/unit tested; guest checkout and the customer checkout UI remain outstanding.
+- Guest order creation/retrieval and its credential lifecycle, checkout UI, order history, saved-item UI, full profile management, admin and staff workflows remain incomplete.
 - Firestore and Storage rules pass the current Emulator Suite tests, but remain an initial baseline requiring production review before deployment.
 - No production deployment or production data migration is authorized.
 
