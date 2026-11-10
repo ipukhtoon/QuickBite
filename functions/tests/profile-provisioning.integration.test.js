@@ -121,3 +121,14 @@ test('authenticated order callable fails closed until restaurant ordering is con
     (error) => error?.code === 'functions/failed-precondition',
   );
 });
+
+test('ordinary authenticated customers cannot invoke staff order transitions', async () => {
+  const transitionOrder = httpsCallable(functions, 'transitionOrder');
+  await assert.rejects(
+    transitionOrder({
+      orderId: 'order-id-1234567890',
+      toStatus: 'accepted',
+    }),
+    (error) => error?.code === 'functions/permission-denied',
+  );
+});
