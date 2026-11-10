@@ -107,3 +107,13 @@ Project planning, implementation and QA milestones.
 - Split Firebase configuration from SDK initialization and lazy-loaded Firebase services when configured.
 - Source inspection completed; GitHub Actions run #123 pending. No real Firebase Auth or browser interaction test is claimed.
 - Firestore customer-profile provisioning remains outstanding.
+
+
+### Stage 5 Phase 8 — trusted authenticated order creation
+- Added authenticated `createOrder` callable and server-authoritative Firestore order validation.
+- Added canonical idempotency fingerprints and safe replay handling.
+- Added immutable order item/option/price snapshots, COD/COP selection, integer-minor-unit totals, separate unpaid payment state and initial order audit event.
+- Added fake-transaction unit tests plus Firebase Auth/Functions/Firestore Emulator callable checks.
+- GitHub Actions run #158 passed six order-service unit tests, six profile/auth callable integration tests, five cart tests, production Vite build and 11 Firestore/Storage rules tests.
+- Guest checkout remains disabled until guest credential expiry, retrieval, recovery and account claiming are specified and implemented.
+- No production Firebase deployment or browser/device interaction test performed.
