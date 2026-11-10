@@ -103,3 +103,21 @@ test('trusted order callable rejects unauthenticated requests', async () => {
     (error) => error?.code === 'functions/unauthenticated',
   );
 });
+
+test('authenticated order callable fails closed until restaurant ordering is configured', async () => {
+  const createOrder = httpsCallable(functions, 'createOrder');
+  await assert.rejects(
+    createOrder({
+      idempotencyKey: 'emulator-order-submission-key-123456',
+      items: [{
+        productId: 'missing-product',
+        quantity: 1,
+        selections: [],
+      }],
+      fulfilmentType: 'pickup',
+      paymentMethod: 'COP',
+      customer: { name: 'Emulator Test', phone: '+10000000000' },
+    }),
+    (error) => error?.code === 'functions/failed-precondition',
+  );
+});
