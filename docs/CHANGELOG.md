@@ -125,3 +125,11 @@ Project planning, implementation and QA milestones.
 - Added customer order-history composite index.
 - GitHub Actions run #183 passed 23 Cloud Functions tests, 5 cart tests, Vite production build and 11 Firestore/Storage Emulator security tests.
 - Cancellation/rejection policy, guest order lifecycle, customer checkout/history UI and staff/admin interfaces remain outstanding.
+
+
+### Stage 5 Phase 10 — customer order history
+- Added customer-scoped Firestore order history query and responsive dialog.
+- Added loading, empty, signed-out, unconfigured, refresh and error states.
+- Added safe order summaries for status, items, totals and cash payment state.
+- GitHub Actions run #200 was pending when this entry was saved; no browser/device interaction test is claimed.
+- Guest order retrieval and customer checkout/order confirmation remain outstanding.
