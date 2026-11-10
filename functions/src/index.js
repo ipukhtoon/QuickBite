@@ -5,6 +5,7 @@ import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { logger } from 'firebase-functions';
 import { buildCustomerProfile } from './profile-model.js';
 import { createCustomerOrder } from './order-service.js';
+import { transitionOrderStatus } from './order-workflow.js';
 
 if (!getApps().length) initializeApp();
 
@@ -62,5 +63,35 @@ export const createOrder = onCall(async (request) => {
       code: error?.code || 'unknown',
     });
     throw new HttpsError('internal', 'We could not place your order. Please retry safely.');
+  }
+});
+
+export const transitionOrder = onCall(async (request) => {
+  if (!request.auth?.uid) {
+    throw new HttpsError('unauthenticated', 'Sign in with an authorized staff account.');
+  }
+
+  try {
+    const result = await transitionOrderStatus({
+      db: getFirestore(),
+      actorUid: request.auth.uid,
+      payload: request.data,
+    });
+    return { ok: true, ...result };
+  } catch (error) {
+    const allowedCodes = new Set([
+      'invalid-argument',
+      'failed-precondition',
+      'permission-denied',
+      'not-found',
+      'unauthenticated',
+    ]);
+    if (allowedCodes.has(error?.code)) {
+      throw new HttpsError(error.code, error.message);
+    }
+    logger.error('Order status transition failed.', {
+      code: error?.code || 'unknown',
+    });
+    throw new HttpsError('internal', 'We could not update this order. Please refresh and try again.');
   }
 });
