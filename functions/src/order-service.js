@@ -1,7 +1,10 @@
 import { createHash } from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
 
-const MAX_LINES = 30;
+const MAX_LINES = 20;
+const MAX_GROUPS_PER_PRODUCT = 5;
+const MAX_OPTIONS_PER_GROUP = 5;
+const MAX_TOTAL_SELECTED_OPTIONS = 100;
 const MAX_QUANTITY = 99;
 const MAX_NOTE_LENGTH = 500;
 
@@ -92,10 +95,14 @@ function normalizeRequest(payload) {
       fail('invalid-argument', 'Delivery instructions must be 300 characters or fewer.');
     }
   }
+  let totalSelectedOptions = 0;
   const normalizedItems = items.map((item) => {
     if (!item || !validText(item.productId, 128) || !Number.isInteger(item.quantity)
       || item.quantity < 1 || item.quantity > MAX_QUANTITY || !Array.isArray(item.selections)) {
       fail('invalid-argument', 'One or more cart items are invalid.');
+    }
+    if (item.selections.length > MAX_GROUPS_PER_PRODUCT) {
+      fail('invalid-argument', 'An item contains too many option groups.');
     }
     return {
       productId: item.productId,
@@ -105,7 +112,15 @@ function normalizeRequest(payload) {
           || selection.optionIds.some((id) => !validText(id, 128))) {
           fail('invalid-argument', 'One or more product options are invalid.');
         }
-        return { groupId: selection.groupId, optionIds: [...new Set(selection.optionIds)].sort() };
+        const uniqueOptionIds = [...new Set(selection.optionIds)].sort();
+        if (uniqueOptionIds.length > MAX_OPTIONS_PER_GROUP) {
+          fail('invalid-argument', 'Choose fewer options for this item.');
+        }
+        totalSelectedOptions += uniqueOptionIds.length;
+        if (totalSelectedOptions > MAX_TOTAL_SELECTED_OPTIONS) {
+          fail('invalid-argument', 'Your cart contains too many option selections.');
+        }
+        return { groupId: selection.groupId, optionIds: uniqueOptionIds };
       }).sort((a, b) => a.groupId.localeCompare(b.groupId)),
     };
   });
@@ -143,6 +158,11 @@ async function buildItemSnapshot(transaction, db, item) {
   }
 
   const groupIds = product.optionGroupIds || [];
+  if (groupIds.length > MAX_GROUPS_PER_PRODUCT
+    || groupIds.some((id) => !validText(id, 128))
+    || new Set(groupIds).size !== groupIds.length) {
+    fail('failed-precondition', 'Product options are not configured correctly.');
+  }
   const selectionsByGroup = new Map(item.selections.map((selection) => [selection.groupId, selection.optionIds]));
   if (selectionsByGroup.size !== item.selections.length
     || selectionsByGroup.size !== groupIds.length
@@ -162,7 +182,7 @@ async function buildItemSnapshot(transaction, db, item) {
     const optionIds = selectionsByGroup.get(groupId);
     const min = Number.isInteger(group.minSelections) ? group.minSelections : (group.required ? 1 : 0);
     const max = Number.isInteger(group.maxSelections) ? group.maxSelections : (group.selectionType === 'single' ? 1 : 99);
-    if (optionIds.length < min || optionIds.length > max
+    if (max > MAX_OPTIONS_PER_GROUP || optionIds.length < min || optionIds.length > max
       || (group.selectionType === 'single' && optionIds.length > 1)) {
       fail('invalid-argument', 'Choose the required product options before continuing.');
     }
