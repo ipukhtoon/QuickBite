@@ -117,3 +117,11 @@ Project planning, implementation and QA milestones.
 - GitHub Actions run #158 passed six order-service unit tests, six profile/auth callable integration tests, five cart tests, production Vite build and 11 Firestore/Storage rules tests.
 - Guest checkout remains disabled until guest credential expiry, retrieval, recovery and account claiming are specified and implemented.
 - No production Firebase deployment or browser/device interaction test performed.
+
+
+### Stage 5 Phase 9 — staff order workflow
+- Added role-checked staff/admin order transition callable for the approved fulfilment lifecycle.
+- Added immutable audit event writes and cash collection confirmation before setting paymentStatus to paid.
+- Added customer order-history composite index.
+- GitHub Actions run #183 passed 23 Cloud Functions tests, 5 cart tests, Vite production build and 11 Firestore/Storage Emulator security tests.
+- Cancellation/rejection policy, guest order lifecycle, customer checkout/history UI and staff/admin interfaces remain outstanding.
