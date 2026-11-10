@@ -317,3 +317,74 @@ The live catalogue integration is a meaningful step beyond the sample-only menu,
 ### Goldfish verdict
 
 The customer account interface now has a real Firebase Auth integration path and preserves guest access. It is not yet a verified account journey: Firebase is not connected, no Auth Emulator tests exist, and a Firestore customer profile is not provisioned. Do not mark customer accounts complete or rely on Firestore customer records until those gaps are addressed. Goldfish did not modify implementation files or Firebase data.
+
+
+## Independent inspection — authenticated trusted order creation
+
+### Scope inspected
+Goldfish reviewed the actual source for `functions/src/order-service.js`, `functions/src/index.js`, the order unit tests, Firebase Emulator integration tests, Firestore rules and current project documentation. This was source and automated-test evidence; no browser or customer-facing checkout interaction was available.
+
+### GF-S5-033 — Guest checkout is not implemented
+- **Severity:** High — QB-REQ-008 and guest portion of QB-REQ-012 remain incomplete.
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** The callable rejects unauthenticated users and the service requires a UID. This is a deliberate secure boundary, but it means a guest cannot place an order even though guest checkout is an approved requirement.
+- **Recommendation:** Complete the guest credential lifecycle design (high-entropy secret, hashed storage, expiry, retrieval, recovery, account claiming, rate limits and privacy-safe responses) before exposing guest order creation. Do not weaken order read rules or accept a phone number/order ID as a credential.
+
+### GF-S5-034 — Server-owned pricing and immutable order snapshot
+- **Severity:** Positive control
+- **Evidence:** VERIFIED BY SOURCE; automated tests in CI
+- **Finding:** The order service reloads current product, category, option group, option and public settings documents; ignores client-supplied prices; computes totals in integer minor units; writes an order snapshot, unpaid payment state, initial order status and an audit event.
+- **Recommendation:** Retain server-side authority. Add full real Firestore transaction integration tests for concurrent duplicate submissions and concurrent catalogue price/availability changes before production.
+
+### GF-S5-035 — Idempotency replay behavior
+- **Severity:** Positive control with production hardening outstanding
+- **Evidence:** VERIFIED BY SOURCE; unit tests
+- **Finding:** The idempotency key is scoped by customer UID, hashed before storage and bound to a canonical request fingerprint. Same-payload retries return the existing order; changed-payload key reuse is rejected.
+- **Recommendation:** Define retention/cleanup for idempotency records and verify concurrent duplicate requests against the real Firestore Emulator transaction engine.
+
+### GF-S5-036 — Restaurant settings fail closed
+- **Severity:** Medium
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Ordering, currency, fulfilment, delivery fee/area and explicit tax configuration are required. Missing tax policy prevents order creation rather than silently assuming zero tax.
+- **Recommendation:** Add a guided admin setup/validation screen and a pre-launch readiness report so operators know exactly which settings block ordering.
+
+### GF-S5-037 — Product option schema validation
+- **Severity:** Medium; corrected in the current implementation revision
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** Independent review identified that malformed option group names/required flags or invalid min/max values could produce unusable selections or an undefined field in an order snapshot. The Developer added explicit name, boolean and bounded integer validation and tightened contact validation in the follow-up source revision.
+- **Recommendation:** Keep malformed catalogue configuration fail-closed and add regression tests for missing group names, non-boolean required flags, min greater than max, too many groups/options and invalid phone strings.
+
+### GF-S5-038 — Guest and authenticated checkout UI is still absent
+- **Severity:** High before customer ordering can be considered usable.
+- **Evidence:** VERIFIED BY SOURCE
+- **Finding:** The current customer interface has a local cart preview but no checkout form, fulfilment selector, address/contact capture, price revalidation acknowledgement, submission progress, confirmation screen or order history.
+- **Recommendation:** Build the approved checkout journey against the trusted callable. Show a stable idempotency key during uncertain network retries and never tell customers an order succeeded until the callable confirms it.
+
+### GF-S5-039 — Large Firebase bundle warning
+- **Severity:** Medium
+- **Evidence:** VERIFIED BY CI BUILD LOG
+- **Finding:** The Vite build succeeds but emits a 709.86 kB minified Firebase client chunk (175.85 kB gzip), exceeding the default 500 kB warning threshold.
+- **Recommendation:** Split Firebase SDK modules into intentional chunks or lazy-load services only when configured. Measure actual Android load performance; do not merely suppress the warning.
+
+### GF-S5-040 — Production transaction behavior and ordering policy remain unverified
+- **Severity:** High before launch
+- **Evidence:** NOT TESTABLE
+- **Finding:** CI verifies the service with a deterministic fake transaction adapter and verifies callable authentication/fail-closed behavior with emulators. It does not yet execute a successful complete order through real Firestore Emulator catalogue/settings records. Opening hours, minimum order, delivery-zone-specific fee policy, cancellation rules and idempotency retention are not finalized.
+- **Recommendation:** Add end-to-end emulator tests with synthetic catalogue/settings documents, concurrent submissions and price/availability changes; confirm the missing business policies before enabling ordering.
+
+### Persona simulation after this phase
+
+| Persona | Result |
+|---|---|
+| First-time visitor | Catalogue preview available; live menu requires Firebase configuration |
+| Guest customer | Can preview cart; cannot place an order yet |
+| Registered customer | Account/Auth/profile and authenticated order callable paths exist; no checkout UI |
+| Returning customer | Local cart is bound to auth identity; order history and order status UI outstanding |
+| Restaurant administrator | No admin settings/catalogue management UI; settings must be provisioned outside the app |
+| Restaurant staff | No staff queue or status transition UI |
+| Beginner | Auth feedback exists; ordering setup/checkout guidance is not yet available |
+| Android user | Responsive source exists; browser, keyboard, touch and device interaction testing NOT TESTABLE |
+
+### Goldfish verdict
+
+The trusted order callable is a substantial backend foundation and correctly rejects guest access rather than implementing weak guest security. It is **not a complete ordering journey**. Guest checkout, customer checkout UI, successful full Firestore transaction integration tests, order history, staff/admin operations and Android/browser interaction testing remain outstanding. No production deployment or real data use was performed. Goldfish did not modify application source, Firebase records or production data.
