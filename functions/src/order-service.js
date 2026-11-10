@@ -79,7 +79,8 @@ function normalizeRequest(payload) {
     || (fulfilmentType === 'pickup' && paymentMethod !== 'COP')) {
     fail('invalid-argument', 'Choose the cash payment method that matches your fulfilment method.');
   }
-  if (!customer || !validText(customer.name, 80) || !validText(customer.phone, 32)) {
+  if (!customer || !validText(customer.name, 80) || !validText(customer.phone, 32)
+    || customer.phone.replace(/\\D/g, '').length < 7 || customer.phone.replace(/\\D/g, '').length > 15) {
     fail('invalid-argument', 'Enter your name and a valid contact phone number.');
   }
   if (notes != null && (typeof notes !== 'string' || notes.length > MAX_NOTE_LENGTH)) {
@@ -176,7 +177,9 @@ async function buildItemSnapshot(transaction, db, item) {
     const groupSnapshot = await transaction.get(db.collection('optionGroups').doc(groupId));
     if (!groupSnapshot.exists) fail('failed-precondition', 'A product option is no longer available.');
     const group = groupSnapshot.data();
-    if (group.active !== true || !['single', 'multiple'].includes(group.selectionType)) {
+    if (group.active !== true || !validText(group.name, 100)
+      || typeof group.required !== 'boolean'
+      || !['single', 'multiple'].includes(group.selectionType)) {
       fail('failed-precondition', 'A product option is no longer available.');
     }
     const optionIds = selectionsByGroup.get(groupId);
